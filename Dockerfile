@@ -8,5 +8,4 @@ COPY package.json yarn.lock ./
 RUN apk add --no-cache yarn && yarn install
 RUN apk add --no-cache tzdata postgresql-libs
 COPY . .
-ENV TZ Asia/Taipei
 CMD ["bin/rails", "server", "-b", "0.0.0.0"]
