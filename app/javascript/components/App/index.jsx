@@ -9,6 +9,7 @@ import MyFriends from "components/MyFriends";
 import Settings from "components/Settings";
 import db from "db";
 import "./style";
+
 export default () => {
   const [page, setPage] = useState("home");
   const [priceRecords, setPriceRecords] = useState([]);
@@ -71,6 +72,10 @@ export default () => {
       return;
     }
     const url = new URL("/price_records", window.location);
+    if (settings.island && settings.resident) {
+      url.searchParams.append("friends[][island]", settings.island);
+      url.searchParams.append("friends[][resident]", settings.resident);
+    }
     friends.forEach(({ island, resident }) => {
       url.searchParams.append("friends[][island]", island);
       url.searchParams.append("friends[][resident]", resident);
@@ -88,7 +93,7 @@ export default () => {
           }))
         );
       });
-  }, [friends]);
+  }, [friends, settings]);
 
   let children;
 
