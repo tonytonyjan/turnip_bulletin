@@ -1,0 +1,19 @@
+{
+  "name": "大頭菜時價登錄",
+  "short_name": "大頭菜時價登錄",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ab47bc",
+  "theme_color": "#ab47bc",
+  "description": "大頭菜時價登錄",
+  "icons": [
+    {
+      "src": "/images/touch/turnip192.png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/images/touch/turnip512.png",
+      "sizes": "512x512"
+    }
+  ]
+}
