@@ -6,7 +6,7 @@ class PriceRecordsController < ApplicationController
     price_records =
       PriceRecord
       .search_by_friends_order_by_price(
-        params[:friends].map { |friend| PriceRecord::Friend.new(friend[:island], friend[:resident]) }
+        Array(params[:friends]).map { |friend| PriceRecord::Friend.new(friend[:island], friend[:resident]) }
       ).to_a
     price_records.select! do |price_record|
       time_with_zone = price_record.created_at.localtime(price_record.timezone)
