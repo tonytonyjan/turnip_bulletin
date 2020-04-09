@@ -21,5 +21,13 @@ class PriceRecordsController < ApplicationController
     render json: price_records
   end
 
-  def create; end
+  def create
+    price_record = PriceRecord.new(params.require(:price_record).permit(:island, :resident, :price, :timezone))
+
+    if price_record.save
+      render json: nil, status: :created
+    else
+      render json: price_record.errors, status: :unprocessable_entity
+    end
+  end
 end

@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState, useRef } from "react";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -11,15 +11,29 @@ import AddIcon from "@material-ui/icons/Add";
 import PriceCard from "components/PriceCard";
 import Center from "components/Center";
 import FabContainer from "components/FabContainer";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
 import "./style";
 
-export default ({ priceRecords }) => {
+export default ({ priceRecords, onAddPrice }) => {
   const [first, ...rest] = priceRecords;
+  const [openDialog, setOpenDialog] = useState(false);
+  const inputPrice = useRef(null);
+  const handleCloseDialog = () => setOpenDialog(false);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    onAddPrice(inputPrice.current.value);
+    setOpenDialog(false);
+  };
   return (
     <div className="home">
       <FabContainer
         fab={
-          <Fab color="primary">
+          <Fab color="primary" onClick={() => setOpenDialog(true)}>
             <AddIcon />
           </Fab>
         }
@@ -58,6 +72,31 @@ export default ({ priceRecords }) => {
           </Fragment>
         )}
       </FabContainer>
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <form onSubmit={handleSubmit}>
+          <DialogTitle>新增菜價</DialogTitle>
+          <DialogContent>
+            <TextField
+              inputRef={inputPrice}
+              required
+              autoFocus
+              margin="normal"
+              label="菜價"
+              fullWidth
+              type="number"
+              inputProps={{ min: 1 }}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDialog} color="primary">
+              取消
+            </Button>
+            <Button type="submit" color="primary">
+              送出
+            </Button>
+          </DialogActions>
+        </form>
+      </Dialog>
     </div>
   );
 };

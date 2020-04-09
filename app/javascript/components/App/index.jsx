@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import HomeIcon from "@material-ui/icons/Home";
@@ -15,6 +15,33 @@ export default () => {
   const [priceRecords, setPriceRecords] = useState([]);
   const [friends, setfriends] = useState([]);
   const [settings, setSettings] = useState({ island: "", resident: "" });
+
+  const handleAddPrice = useCallback(
+    (price) => {
+      let timezone = new Date().getTimezoneOffset();
+      timezone = `${timezone > 0 ? "-" : "+"}${(
+        "0" + Math.abs(timezone / 60)
+      ).slice(-2)}:00`;
+
+      fetch("/price_records", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          [document.querySelector("meta[name=csrf-param]")
+            .content]: document.querySelector("meta[name=csrf-token]").content,
+          price_record: {
+            island: settings.island,
+            resident: settings.resident,
+            price,
+            timezone,
+          },
+        }),
+      }).then((response) => {
+        if (response.ok);
+      });
+    },
+    [settings]
+  );
 
   useEffect(() => {
     db.then((db) => {
@@ -99,7 +126,9 @@ export default () => {
 
   switch (page) {
     case "home":
-      children = <Home priceRecords={priceRecords} />;
+      children = (
+        <Home priceRecords={priceRecords} onAddPrice={handleAddPrice} />
+      );
       break;
     case "myFriends":
       children = (
