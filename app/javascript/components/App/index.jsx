@@ -11,92 +11,7 @@ import db from "db";
 import "./style";
 export default () => {
   const [page, setPage] = useState("home");
-  const [priceRecords, setPriceRecords] = useState([
-    {
-      id: "123",
-      island: "香菇寮島",
-      resident: "大兜",
-      price: 123,
-      createdAt: "12:00",
-    },
-    {
-      id: "122",
-      island: "氨基酸島",
-      resident: "賊魚",
-      price: 1456,
-      createdAt: "12:11",
-    },
-    {
-      id: "121",
-      island: "勁辣雞腿島",
-      resident: "安安",
-      price: 32,
-      createdAt: "12:00",
-    },
-    {
-      id: "1231",
-      island: "香菇寮島",
-      resident: "大兜",
-      price: 123,
-      createdAt: "12:00",
-    },
-    {
-      id: "1221",
-      island: "氨基酸島",
-      resident: "賊魚",
-      price: 1456,
-      createdAt: "12:11",
-    },
-    {
-      id: "1211",
-      island: "勁辣雞腿島",
-      resident: "安安",
-      price: 32,
-      createdAt: "12:00",
-    },
-    {
-      id: "1232",
-      island: "香菇寮島",
-      resident: "大兜",
-      price: 123,
-      createdAt: "12:00",
-    },
-    {
-      id: "1222",
-      island: "氨基酸島",
-      resident: "賊魚",
-      price: 1456,
-      createdAt: "12:11",
-    },
-    {
-      id: "1212",
-      island: "勁辣雞腿島",
-      resident: "安安",
-      price: 32,
-      createdAt: "12:00",
-    },
-    {
-      id: "1233",
-      island: "香菇寮島",
-      resident: "大兜",
-      price: 123,
-      createdAt: "12:00",
-    },
-    {
-      id: "1223",
-      island: "氨基酸島",
-      resident: "賊魚",
-      price: 1456,
-      createdAt: "12:11",
-    },
-    {
-      id: "1213",
-      island: "勁辣雞腿島",
-      resident: "安安",
-      price: 32,
-      createdAt: "12:00",
-    },
-  ]);
+  const [priceRecords, setPriceRecords] = useState([]);
   const [friends, setfriends] = useState([]);
   const [settings, setSettings] = useState({ island: "", resident: "" });
 
@@ -149,6 +64,31 @@ export default () => {
         })
     );
   }, [settings]);
+
+  useEffect(() => {
+    if (friends.length === 0) {
+      setPriceRecords([]);
+      return;
+    }
+    const url = new URL("/price_records", window.location);
+    friends.forEach(({ island, resident }) => {
+      url.searchParams.append("friends[][island]", island);
+      url.searchParams.append("friends[][resident]", resident);
+    });
+    fetch(url)
+      .then((response) => response.json())
+      .then((priceRecords) => {
+        setPriceRecords(
+          priceRecords.map((priceRecord) => ({
+            id: priceRecord.id,
+            island: priceRecord.island,
+            resident: priceRecord.resident,
+            price: priceRecord.price,
+            createdAt: priceRecords.created_at,
+          }))
+        );
+      });
+  }, [friends]);
 
   let children;
 
