@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import HomeIcon from "@material-ui/icons/Home";
@@ -7,8 +7,8 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import Home from "components/Home";
 import MyFriends from "components/MyFriends";
 import Settings from "components/Settings";
+import db from "db";
 import "./style";
-
 export default () => {
   const [page, setPage] = useState("home");
   const [priceRecords, setPriceRecords] = useState([
@@ -97,13 +97,30 @@ export default () => {
       createdAt: "12:00",
     },
   ]);
-  const [friends, setfriends] = useState([
-    { island: "香菇寮島", resident: "大兜" },
-    { island: "香菇寮島", resident: "茄子豬" },
-    { island: "香菇寮島", resident: "美心" },
-  ]);
+  const [friends, setfriends] = useState([]);
   const [island, setIsland] = useState("");
   const [resident, setResident] = useState("");
+
+  useEffect(() => {
+    db.then((db) => {
+      db.transaction("friends").objectStore("friends").getAll().onsuccess = ({
+        target: { result: friends },
+      }) => setfriends(friends);
+    });
+  }, []);
+
+  useEffect(() => {
+    db.then(
+      (db) =>
+        (db
+          .transaction("friends", "readwrite")
+          .objectStore("friends")
+          .clear().onsuccess = ({ target: { source: store } }) =>
+          friends.forEach((friend) =>
+            store.add(friend, `${friend.island}_${friend.resident}`)
+          ))
+    );
+  }, [friends]);
 
   let children;
 
@@ -122,7 +139,7 @@ export default () => {
                   friend.island === island && friend.resident === resident
               )
             )
-              setfriends(friends.concat([{ island, resident }]));
+              setfriends([...friends, { island, resident }]);
           }}
           onDeleteFriend={(island, resident) =>
             setfriends(
