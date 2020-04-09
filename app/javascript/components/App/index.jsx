@@ -98,14 +98,28 @@ export default () => {
     },
   ]);
   const [friends, setfriends] = useState([]);
-  const [island, setIsland] = useState("");
-  const [resident, setResident] = useState("");
+  const [settings, setSettings] = useState({ island: "", resident: "" });
 
   useEffect(() => {
     db.then((db) => {
       db.transaction("friends").objectStore("friends").getAll().onsuccess = ({
         target: { result: friends },
       }) => setfriends(friends);
+    });
+  }, []);
+
+  useEffect(() => {
+    const settings = {};
+    db.then((db) => {
+      db
+        .transaction("settings")
+        .objectStore("settings")
+        .openCursor().onsuccess = ({ target: { result: cursor } }) => {
+        if (cursor) {
+          settings[cursor.key] = cursor.value;
+          cursor.continue();
+        } else setSettings(settings);
+      };
     });
   }, []);
 
@@ -121,6 +135,20 @@ export default () => {
           ))
     );
   }, [friends]);
+
+  useEffect(() => {
+    db.then(
+      (db) =>
+        (db
+          .transaction("settings", "readwrite")
+          .objectStore("settings")
+          .clear().onsuccess = ({ target: { source: store } }) => {
+          Object.entries(settings).forEach(([key, value]) =>
+            store.add(value, key)
+          );
+        })
+    );
+  }, [settings]);
 
   let children;
 
@@ -153,7 +181,13 @@ export default () => {
       );
       break;
     case "settings":
-      children = <Settings island={island} resident={resident} />;
+      children = (
+        <Settings
+          island={settings.island}
+          resident={settings.resident}
+          onSave={setSettings}
+        />
+      );
       break;
     default:
       children = <h1>404</h1>;

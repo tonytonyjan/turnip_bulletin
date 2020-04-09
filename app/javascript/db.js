@@ -7,5 +7,6 @@ export default new Promise((resolve, reject) => {
   };
   request.onupgradeneeded = ({ target: { result: db } }) => {
     db.createObjectStore("friends");
+    db.createObjectStore("settings");
   };
 });
