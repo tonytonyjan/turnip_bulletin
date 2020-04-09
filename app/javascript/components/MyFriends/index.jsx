@@ -31,6 +31,12 @@ export default ({ friends, onDeleteFriend, onAddFriend }) => {
   const handleCloseDialogDeleteFriend = () => setOpenDialogDeleteFriend(false);
   const handleCloseDialogAddFriend = () => setOpenDialogAddFriend(false);
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    onAddFriend(inputIsland.current.value, inputResident.current.value);
+    setOpenDialogAddFriend(false);
+  };
+
   return (
     <div className="my-friends">
       <FabContainer
@@ -94,47 +100,35 @@ export default ({ friends, onDeleteFriend, onAddFriend }) => {
         onClose={handleCloseDialogAddFriend}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle>新增菜友</DialogTitle>
-        <DialogContent>
-          <TextField
-            inputRef={inputIsland}
-            required
-            autoFocus
-            margin="normal"
-            label="島嶼名稱"
-            placeholder="ex. 香菇寮島"
-            fullWidth
-          />
-          <TextField
-            inputRef={inputResident}
-            required
-            margin="normal"
-            label="居民名稱"
-            fullWidth
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialogAddFriend} color="primary">
-            取消
-          </Button>
-          <Button
-            onClick={() => {
-              if (
-                inputIsland.current.validity.valid &&
-                inputResident.current.validity.valid
-              ) {
-                onAddFriend(
-                  inputIsland.current.value,
-                  inputResident.current.value
-                );
-                setOpenDialogAddFriend(false);
-              }
-            }}
-            color="primary"
-          >
-            儲存
-          </Button>
-        </DialogActions>
+        <form onSubmit={handleSubmit}>
+          <DialogTitle>新增菜友</DialogTitle>
+          <DialogContent>
+            <TextField
+              inputRef={inputIsland}
+              required
+              autoFocus
+              margin="normal"
+              label="島嶼名稱"
+              placeholder="ex. 香菇寮島"
+              fullWidth
+            />
+            <TextField
+              inputRef={inputResident}
+              required
+              margin="normal"
+              label="居民名稱"
+              fullWidth
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDialogAddFriend} color="primary">
+              取消
+            </Button>
+            <Button type="submit" color="primary">
+              儲存
+            </Button>
+          </DialogActions>
+        </form>
       </Dialog>
     </div>
   );
