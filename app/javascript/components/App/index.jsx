@@ -16,6 +16,55 @@ export default () => {
   const [friends, setfriends] = useState([]);
   const [settings, setSettings] = useState({ island: "", resident: "" });
 
+  const handleSave = useCallback(
+    ({ island, resident }) => {
+      db.then((db) => {
+        const transaction = db.transaction("settings", "readwrite");
+        const store = transaction.objectStore("settings");
+        store.put(island, "island");
+        store.put(resident, "resident");
+        transaction.oncomplete = () => setSettings({ island, resident });
+      });
+    },
+    [settings]
+  );
+
+  const handleDeleteFriend = useCallback(
+    (island, resident) => {
+      const key = `${island}_${resident}`;
+      db.then((db) => {
+        db
+          .transaction("friends", "readwrite")
+          .objectStore("friends")
+          .delete(key).onsuccess = () => {
+          setfriends(
+            friends.filter(
+              (friend) =>
+                friend.island !== island || friend.resident !== resident
+            )
+          );
+        };
+      });
+    },
+    [friends]
+  );
+
+  const handleAddFriend = useCallback((island, resident) => {
+    const key = `${island}_${resident}`;
+    const value = { island, resident };
+    db.then((db) => {
+      db.transaction("friends").objectStore("friends").get(key).onsuccess = ({
+        target: { result },
+      }) => {
+        if (!result)
+          db
+            .transaction("friends", "readwrite")
+            .objectStore("friends")
+            .add(value, key).onsuccess = () => setfriends([...friends, value]);
+      };
+    });
+  });
+
   const handleAddPrice = useCallback(
     (price) => {
       let timezone = new Date().getTimezoneOffset();
@@ -67,33 +116,6 @@ export default () => {
   }, []);
 
   useEffect(() => {
-    db.then(
-      (db) =>
-        (db
-          .transaction("friends", "readwrite")
-          .objectStore("friends")
-          .clear().onsuccess = ({ target: { source: store } }) =>
-          friends.forEach((friend) =>
-            store.add(friend, `${friend.island}_${friend.resident}`)
-          ))
-    );
-  }, [friends]);
-
-  useEffect(() => {
-    db.then(
-      (db) =>
-        (db
-          .transaction("settings", "readwrite")
-          .objectStore("settings")
-          .clear().onsuccess = ({ target: { source: store } }) => {
-          Object.entries(settings).forEach(([key, value]) =>
-            store.add(value, key)
-          );
-        })
-    );
-  }, [settings]);
-
-  useEffect(() => {
     if (friends.length === 0) {
       setPriceRecords([]);
       return;
@@ -134,23 +156,8 @@ export default () => {
       children = (
         <MyFriends
           friends={friends}
-          onAddFriend={(island, resident) => {
-            if (
-              !friends.find(
-                (friend) =>
-                  friend.island === island && friend.resident === resident
-              )
-            )
-              setfriends([...friends, { island, resident }]);
-          }}
-          onDeleteFriend={(island, resident) =>
-            setfriends(
-              friends.filter(
-                (friend) =>
-                  friend.island !== island || friend.resident !== resident
-              )
-            )
-          }
+          onAddFriend={handleAddFriend}
+          onDeleteFriend={handleDeleteFriend}
         />
       );
       break;
@@ -159,7 +166,7 @@ export default () => {
         <Settings
           island={settings.island}
           resident={settings.resident}
-          onSave={setSettings}
+          onSave={handleSave}
         />
       );
       break;
