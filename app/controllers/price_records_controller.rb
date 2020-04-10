@@ -27,7 +27,6 @@ class PriceRecordsController < ApplicationController
     else
       price_record = PriceRecord.new(**price_record_params, created_at: now)
     end
-
     if price_record.save
       render json: nil, status: :created
     else
@@ -38,6 +37,11 @@ class PriceRecordsController < ApplicationController
   private
 
   def price_record_params
-    params.require(:price_record).permit(:island, :resident, :price, :timezone)
+    params
+      .require(:price_record)
+      .permit(:island, :resident, :price, :timezone)
+      .tap do |i|
+        i.require(%i[island resident price timezone])
+      end
   end
 end
