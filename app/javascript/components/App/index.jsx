@@ -11,6 +11,7 @@ import db from "db";
 import "./style";
 
 export default () => {
+  const [initialized, setInitialized] = useState(false);
   const [page, setPage] = useState("home");
   const [priceRecords, setPriceRecords] = useState([]);
   const [friends, setfriends] = useState([]);
@@ -86,40 +87,13 @@ export default () => {
           },
         }),
       }).then((response) => {
-        if (response.ok);
+        if (response.ok) fetchPriceRecords();
       });
     },
     [settings]
   );
 
-  useEffect(() => {
-    db.then((db) => {
-      db.transaction("friends").objectStore("friends").getAll().onsuccess = ({
-        target: { result: friends },
-      }) => setfriends(friends);
-    });
-  }, []);
-
-  useEffect(() => {
-    const settings = {};
-    db.then((db) => {
-      db
-        .transaction("settings")
-        .objectStore("settings")
-        .openCursor().onsuccess = ({ target: { result: cursor } }) => {
-        if (cursor) {
-          settings[cursor.key] = cursor.value;
-          cursor.continue();
-        } else setSettings(settings);
-      };
-    });
-  }, []);
-
-  useEffect(() => {
-    if (friends.length === 0) {
-      setPriceRecords([]);
-      return;
-    }
+  const fetchPriceRecords = useCallback(() => {
     const url = new URL("/price_records", window.location);
     if (settings.island && settings.resident) {
       url.searchParams.append("friends[][island]", settings.island);
@@ -143,6 +117,40 @@ export default () => {
         );
       });
   }, [friends, settings]);
+
+  useEffect(() => {
+    db.then((db) => {
+      Promise.all([
+        new Promise((resolve) => {
+          db
+            .transaction("friends")
+            .objectStore("friends")
+            .getAll().onsuccess = ({ target: { result: friends } }) =>
+            resolve(friends);
+        }),
+        new Promise((resolve) => {
+          const settings = {};
+          db
+            .transaction("settings")
+            .objectStore("settings")
+            .openCursor().onsuccess = ({ target: { result: cursor } }) => {
+            if (cursor) {
+              settings[cursor.key] = cursor.value;
+              cursor.continue();
+            } else resolve(settings);
+          };
+        }),
+      ]).then(([friends, settings]) => {
+        setfriends(friends);
+        setSettings(settings);
+        setInitialized(true);
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    if (initialized) fetchPriceRecords();
+  }, [initialized, friends, settings]);
 
   let children;
 
