@@ -4,8 +4,8 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import IconButton from "@material-ui/core/IconButton";
+import Typography from "@material-ui/core/Typography";
 import DeleteIcon from "@material-ui/icons/Delete";
-import Center from "components/Center";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -47,7 +47,9 @@ export default ({ friends, onDeleteFriend, onAddFriend }) => {
         }
       >
         {friends.length === 0 ? (
-          <Center text="沒有朋友" />
+          <div className="my-friends__title">
+            <Typography variant="h2">沒有朋友</Typography>
+          </div>
         ) : (
           <List>
             {friends.map(({ island, resident }) => (

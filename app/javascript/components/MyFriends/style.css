@@ -1,3 +1,10 @@
 .my-friends {
   height: 100%;
 }
+
+.my-friends__title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
