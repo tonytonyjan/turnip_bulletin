@@ -138,7 +138,7 @@ export default () => {
             island: priceRecord.island,
             resident: priceRecord.resident,
             price: priceRecord.price,
-            createdAt: priceRecords.created_at,
+            createdAt: priceRecord.created_at,
           }))
         );
       });
