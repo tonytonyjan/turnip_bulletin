@@ -112,7 +112,10 @@ export default () => {
             island: priceRecord.island,
             resident: priceRecord.resident,
             price: priceRecord.price,
-            time: priceRecord.updated_at,
+            time:
+              new Date(Date.parse(priceRecord.updated_at)).getHours() < 12
+                ? "上午"
+                : "下午",
           }))
         );
       });
