@@ -8,6 +8,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
+import HotelIcon from "@material-ui/icons/Hotel";
 import PriceCard from "components/PriceCard";
 import FabContainer from "components/FabContainer";
 import Dialog from "@material-ui/core/Dialog";
@@ -18,7 +19,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import "./style";
 
-export default ({ priceRecords, onAddPrice }) => {
+export default ({ priceRecords, onAddPrice, disabled }) => {
   const [first, ...rest] = priceRecords;
   const [openDialog, setOpenDialog] = useState(false);
   const inputPrice = useRef(null);
@@ -32,8 +33,12 @@ export default ({ priceRecords, onAddPrice }) => {
     <div className="home">
       <FabContainer
         fab={
-          <Fab color="primary" onClick={() => setOpenDialog(true)}>
-            <AddIcon />
+          <Fab
+            disabled={disabled}
+            color="primary"
+            onClick={() => setOpenDialog(true)}
+          >
+            {disabled ? <HotelIcon /> : <AddIcon />}
           </Fab>
         }
       >

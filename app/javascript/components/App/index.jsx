@@ -178,8 +178,13 @@ export default () => {
 
   switch (page) {
     case "home":
+      const currentHour = new Date().getHours();
       children = (
-        <Home priceRecords={priceRecords} onAddPrice={handleAddPrice} />
+        <Home
+          priceRecords={priceRecords}
+          onAddPrice={handleAddPrice}
+          disabled={currentHour < 8 || currentHour >= 22}
+        />
       );
       break;
     case "myFriends":
