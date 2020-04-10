@@ -43,8 +43,9 @@ class PriceRecord < ApplicationRecord
   end
 
   def validate_time
-    return unless created_at && timezone && ExpirationCalculator
-                  .interval(created_at.localtime(timezone)).include?(created_at)
+    if created_at && timezone && ExpirationCalculator.interval(created_at.localtime(timezone)).include?(created_at)
+      return
+    end
 
     errors.add(:base, 'invalid creation time')
   end
