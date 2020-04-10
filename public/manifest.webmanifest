@@ -1,11 +1,11 @@
 {
-  "name": "大頭菜時價登錄",
-  "short_name": "大頭菜時價登錄",
+  "name": "動森股友會",
+  "short_name": "動森股友會",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ab47bc",
   "theme_color": "#ab47bc",
-  "description": "大頭菜時價登錄",
+  "description": "「動森股友會」是一款大頭菜價錢的情報分享應用，比起預測大頭菜走向，不如多一點菜友，大家一起發大財",
   "icons": [
     {
       "src": "/images/touch/turnip192.png",
