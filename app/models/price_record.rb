@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'expiration_calculator'
+
 class PriceRecord < ApplicationRecord
   SECONDS_10_HOURS = 36_000
   Friend = Struct.new(:island, :resident)
@@ -23,16 +25,15 @@ class PriceRecord < ApplicationRecord
         end
       )
     )
-      .where('created_at > ?', now - SECONDS_10_HOURS)
+      .where('updated_at > ?', now - SECONDS_10_HOURS)
       .order(price: :desc)
   end
 
+  def expiration
+    ExpirationCalculator.end(updated_at.localtime(timezone))
+  end
+
   def expired?(now: Time.now)
-    time_with_zone = created_at.localtime(timezone)
-    case time_with_zone.hour
-    when 8...12 then now >= Time.new(time_with_zone.year, time_with_zone.month, time_with_zone.day, 12, 0, 0, timezone)
-    when 12...22 then now >= Time.new(time_with_zone.year, time_with_zone.month, time_with_zone.day, 22, 0, 0, timezone)
-    else false
-    end
+    now >= expiration
   end
 end

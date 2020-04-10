@@ -112,7 +112,7 @@ export default () => {
             island: priceRecord.island,
             resident: priceRecord.resident,
             price: priceRecord.price,
-            createdAt: priceRecord.created_at,
+            time: priceRecord.updated_at,
           }))
         );
       });

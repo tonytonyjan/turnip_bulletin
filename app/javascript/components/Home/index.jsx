@@ -55,14 +55,14 @@ export default ({ priceRecords, onAddPrice }) => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {rest.map(({ id, island, resident, price, createdAt }) => (
+                    {rest.map(({ id, island, resident, price, time }) => (
                       <TableRow key={id}>
                         <TableCell component="th" scope="row">
                           {island}
                         </TableCell>
                         <TableCell>{resident}</TableCell>
                         <TableCell align="right">{price}</TableCell>
-                        <TableCell>{createdAt}</TableCell>
+                        <TableCell>{time}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

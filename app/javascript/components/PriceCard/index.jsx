@@ -4,7 +4,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import "./style";
 
-export default ({ island, resident, price, createdAt }) => (
+export default ({ island, resident, price, time }) => (
   <div className="price-card">
     <Card>
       <div className="price-card__content">
@@ -23,7 +23,7 @@ export default ({ island, resident, price, createdAt }) => (
             {price}
           </Typography>
           <div className="price-card__time">
-            <Typography variant="caption">{createdAt}</Typography>
+            <Typography variant="caption">{time}</Typography>
           </div>
         </CardContent>
       </div>
