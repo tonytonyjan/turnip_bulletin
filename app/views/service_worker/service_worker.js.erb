@@ -1,0 +1,23 @@
+self.addEventListener("install", (e) => {
+  e.waitUntil(
+    caches.open("turnip").then((cache) => {
+      return cache.addAll([
+        "/",
+        "<%= asset_pack_path 'app.js' %>",
+        "/favicon.ico",
+        "/images/touch/turnip192.png",
+        "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap",
+      ]);
+    })
+  );
+});
+
+self.addEventListener("fetch", (event) => {
+  console.log(event.request.url);
+
+  event.respondWith(
+    caches
+      .match(event.request)
+      .then((response) => response || fetch(event.request))
+  );
+});
