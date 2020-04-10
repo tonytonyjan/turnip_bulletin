@@ -196,7 +196,7 @@ export default () => {
           onChange={(_, newValue) => setPage(newValue)}
         >
           <BottomNavigationAction
-            label="首頁"
+            label="及時菜價"
             value="home"
             icon={<HomeIcon />}
           />
