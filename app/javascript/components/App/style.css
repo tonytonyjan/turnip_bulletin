@@ -28,3 +28,7 @@ body {
   width: 100%;
   bottom: 0;
 }
+
+.app__snackbar {
+  bottom: 56px;
+}

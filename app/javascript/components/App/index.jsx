@@ -1,21 +1,37 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { Fragment, useState, useEffect, useCallback } from "react";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
+import Snackbar from "@material-ui/core/Snackbar";
+import IconButton from "@material-ui/core/IconButton";
 import HomeIcon from "@material-ui/icons/Home";
 import PeopleIcon from "@material-ui/icons/People";
 import SettingsIcon from "@material-ui/icons/Settings";
+import CloseIcon from "@material-ui/icons/Close";
 import Home from "components/Home";
 import MyFriends from "components/MyFriends";
 import Settings from "components/Settings";
+import { makeStyles } from "@material-ui/core/styles";
 import db from "db";
 import "./style";
 
+const useStyles = makeStyles((theme) => ({
+  snackbar: {
+    bottom: 72,
+  },
+}));
+
 export default () => {
+  const classes = useStyles();
   const [initialized, setInitialized] = useState(false);
   const [page, setPage] = useState("home");
   const [priceRecords, setPriceRecords] = useState([]);
   const [friends, setfriends] = useState([]);
   const [settings, setSettings] = useState({ island: "", resident: "" });
+  const [snackbar, setSnackbar] = useState({ message: "", open: false });
+
+  const handleSnackbarClose = useCallback(() => {
+    setSnackbar((state) => ({ ...state, open: false }));
+  }, [setSnackbar]);
 
   const handleSave = useCallback(
     ({ island, resident }) => {
@@ -24,7 +40,10 @@ export default () => {
         const store = transaction.objectStore("settings");
         store.put(island, "island");
         store.put(resident, "resident");
-        transaction.oncomplete = () => setSettings({ island, resident });
+        transaction.oncomplete = () => {
+          setSettings({ island, resident });
+          setSnackbar({ message: "已儲存", open: true });
+        };
       });
     },
     [settings]
@@ -212,6 +231,24 @@ export default () => {
           />
         </BottomNavigation>
       </div>
+      <Snackbar
+        className={classes.snackbar}
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        message={snackbar.message}
+        action={
+          <Fragment>
+            <IconButton
+              size="small"
+              color="inherit"
+              onClick={handleSnackbarClose}
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </Fragment>
+        }
+      />
     </div>
   );
 };

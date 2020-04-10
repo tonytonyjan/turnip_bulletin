@@ -9,7 +9,6 @@ import Paper from "@material-ui/core/Paper";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import PriceCard from "components/PriceCard";
-import Center from "components/Center";
 import FabContainer from "components/FabContainer";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -38,43 +37,39 @@ export default ({ priceRecords, onAddPrice }) => {
           </Fab>
         }
       >
-        {!first ? (
-          <Center text="沒有資料" />
-        ) : (
-          <Fragment>
-            <PriceCard {...first} />
-            <div className="home__table">
-              <TableContainer component={Paper}>
-                <Table aria-label="simple table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>島嶼</TableCell>
-                      <TableCell>島民</TableCell>
-                      <TableCell align="right">時價</TableCell>
-                      <TableCell>時間</TableCell>
+        <Fragment>
+          {first && <PriceCard {...first} />}
+          <div className="home__table">
+            <TableContainer component={Paper}>
+              <Table aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>島嶼</TableCell>
+                    <TableCell>島民</TableCell>
+                    <TableCell align="right">時價</TableCell>
+                    <TableCell>時間</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {rest.map(({ id, island, resident, price, time }) => (
+                    <TableRow key={id}>
+                      <TableCell component="th" scope="row">
+                        {island}
+                      </TableCell>
+                      <TableCell>{resident}</TableCell>
+                      <TableCell align="right">{price}</TableCell>
+                      <TableCell>{time}</TableCell>
                     </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {rest.map(({ id, island, resident, price, time }) => (
-                      <TableRow key={id}>
-                        <TableCell component="th" scope="row">
-                          {island}
-                        </TableCell>
-                        <TableCell>{resident}</TableCell>
-                        <TableCell align="right">{price}</TableCell>
-                        <TableCell>{time}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </div>
-          </Fragment>
-        )}
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
+        </Fragment>
       </FabContainer>
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <form onSubmit={handleSubmit}>
-          <DialogTitle>新增菜價</DialogTitle>
+          <DialogTitle>報菜價</DialogTitle>
           <DialogContent>
             <TextField
               inputRef={inputPrice}
