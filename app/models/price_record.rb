@@ -6,6 +6,11 @@ class PriceRecord < ApplicationRecord
   SECONDS_10_HOURS = 36_000
   Friend = Struct.new(:island, :resident)
 
+  validates :island, :resident, presence: true
+  validates :price, presence: true, numericality: { greater_than: 0 }
+  validates :timezone, presence: true, format: { with: /\A[+-]\d{2}:\d{2}\z/ }
+  validate :validate_time, on: :create
+
   def self.search_by_friends_order_by_price(friends, now: Time.now)
     where(
       Arel::Nodes::In.new(
@@ -35,5 +40,12 @@ class PriceRecord < ApplicationRecord
 
   def expired?(now: Time.now)
     now >= expiration
+  end
+
+  def validate_time
+    return unless created_at && timezone && ExpirationCalculator
+                  .interval(created_at.localtime(timezone)).include?(created_at)
+
+    errors.add(:base, 'invalid creation time')
   end
 end
