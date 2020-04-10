@@ -19,7 +19,7 @@ export default ({ island, resident, onSave }) => {
         required
         margin="normal"
         label="我的島嶼名稱"
-        placeholder="ex. 香菇寮島"
+        placeholder="ex. 今年一定島"
         fullWidth
         defaultValue={island}
       />
@@ -30,6 +30,7 @@ export default ({ island, resident, onSave }) => {
         label="我在島嶼上的名字"
         fullWidth
         defaultValue={resident}
+        placeholder="ex. 小明"
       />
       <Button color="primary" type="submit">
         儲存

@@ -14,9 +14,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import db from "db";
 import "./style";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   snackbar: {
     bottom: 72,
+  },
+  snackbarAboveFab: {
+    bottom: 144,
   },
 }));
 
@@ -87,6 +90,13 @@ export default () => {
 
   const handleAddPrice = useCallback(
     (price) => {
+      if (!settings.island || !settings.resident) {
+        setSnackbar({
+          open: true,
+          message: "請先到「設定」頁填寫島嶼名稱和名字",
+        });
+        return;
+      }
       let timezone = new Date().getTimezoneOffset();
       timezone = `${timezone > 0 ? "-" : "+"}${(
         "0" + Math.abs(timezone / 60)
@@ -237,9 +247,11 @@ export default () => {
         </BottomNavigation>
       </div>
       <Snackbar
-        className={classes.snackbar}
+        className={
+          page === "settings" ? classes.snackbar : classes.snackbarAboveFab
+        }
         open={snackbar.open}
-        autoHideDuration={3000}
+        autoHideDuration={6000}
         onClose={handleSnackbarClose}
         message={snackbar.message}
         action={
