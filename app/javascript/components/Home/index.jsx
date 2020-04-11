@@ -7,7 +7,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Fab from "@material-ui/core/Fab";
-import AddIcon from "@material-ui/icons/Add";
+import SendIcon from "@material-ui/icons/Send";
 import HotelIcon from "@material-ui/icons/Hotel";
 import PriceCard from "components/PriceCard";
 import FabContainer from "components/FabContainer";
@@ -38,7 +38,7 @@ export default ({ priceRecords, onAddPrice, disabled }) => {
             color="primary"
             onClick={() => setOpenDialog(true)}
           >
-            {disabled ? <HotelIcon /> : <AddIcon />}
+            {disabled ? <HotelIcon /> : <SendIcon />}
           </Fab>
         }
       >
