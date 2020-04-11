@@ -7,6 +7,5 @@
 .fab-container__fab {
   position: fixed;
   bottom: 72px;
-  left: 50%;
-  transform: translateX(-50%);
+  right: 16px;
 }
