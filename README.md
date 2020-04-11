@@ -1,24 +1,15 @@
-# README
+# Development
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+```sh
+docker-compose up
+```
 
-Things you may want to cover:
+SSL:
 
-* Ruby version
+```sh
+export RAILS_BIND=ssl://0.0.0.0:3000?key=dev.local-key.pem&cert=dev.local.pem
+export RAILS_HOSTS=dev.local
+docker-compose up
+```
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+You probably want to use [mkcert](https://github.com/FiloSottile/mkcert) and then [import mkcert's root certification to your smart phone](https://support.google.com/pixelphone/answer/2844832?hl=en&visit_id=637221873894545426-2706422605&rd=1).
