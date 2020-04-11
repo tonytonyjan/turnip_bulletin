@@ -3,6 +3,7 @@
 require 'expiration_calculator'
 
 class PriceRecordsController < ApplicationController
+  skip_before_action :verify_authenticity_token
   def index
     params.permit(friends: %i[island resident])
     price_records =
