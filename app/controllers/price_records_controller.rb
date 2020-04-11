@@ -12,7 +12,6 @@ class PriceRecordsController < ApplicationController
       .search_by_friends_order_by_price(
         Array(params[:friends]).map { |friend| PriceRecord::Friend.new(friend[:island], friend[:resident]) }
       ).to_a
-    price_records.reject!(&:expired?)
     price_records.map! do |price_record|
       price_record.attributes.slice('id', 'island', 'resident', 'price', 'updated_at')
     end
