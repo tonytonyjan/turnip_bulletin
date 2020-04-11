@@ -14,7 +14,9 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
-import FabContainer from "components/FabContainer";
+import FabContainer, {
+  Fabs as FabContainerFabs,
+} from "components/FabContainer";
 import "./style";
 
 export default ({ friends, onDeleteFriend, onAddFriend }) => {
@@ -39,13 +41,7 @@ export default ({ friends, onDeleteFriend, onAddFriend }) => {
 
   return (
     <div className="my-friends">
-      <FabContainer
-        fab={
-          <Fab color="primary" onClick={() => setOpenDialogAddFriend(true)}>
-            <AddIcon />
-          </Fab>
-        }
-      >
+      <FabContainer>
         {friends.length === 0 ? (
           <div className="my-friends__title">
             <Typography variant="h2">沒有朋友</Typography>
@@ -73,6 +69,11 @@ export default ({ friends, onDeleteFriend, onAddFriend }) => {
             ))}
           </List>
         )}
+        <FabContainerFabs>
+          <Fab color="primary" onClick={() => setOpenDialogAddFriend(true)}>
+            <AddIcon />
+          </Fab>
+        </FabContainerFabs>
       </FabContainer>
 
       <Dialog

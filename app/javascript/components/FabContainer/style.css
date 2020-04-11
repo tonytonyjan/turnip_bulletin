@@ -4,8 +4,14 @@
   padding-bottom: 144px;
 }
 
-.fab-container__fab {
+.fab-container__fabs {
+  display: flex;
+  flex-direction: column;
   position: fixed;
   bottom: 72px;
   right: 16px;
+}
+
+.fab-container__fab + .fab-container__fab {
+  margin-top: 8px;
 }
