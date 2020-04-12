@@ -19,7 +19,7 @@ const useStyles = makeStyles(() => ({
     bottom: 72,
   },
   snackbarAboveFab: {
-    bottom: 144,
+    bottom: 192,
   },
 }));
 

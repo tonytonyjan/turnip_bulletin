@@ -1,3 +1,8 @@
+html,
+body {
+  height: 100%;
+}
+
 html {
   box-sizing: border-box;
 }
@@ -10,25 +15,25 @@ html {
 
 body {
   margin: 0;
+  overflow-y: scroll;
 }
 
 .app {
-  position: relative;
-  height: 100vh;
   padding-bottom: 56px;
 }
 
 .app__main {
-  height: 100%;
   padding: 16px;
+}
+
+.app__fabs {
+  position: fixed;
+  bottom: 0;
+  right: 16px;
 }
 
 .app__nav {
   position: fixed;
   width: 100%;
   bottom: 0;
-}
-
-.app__snackbar {
-  bottom: 56px;
 }

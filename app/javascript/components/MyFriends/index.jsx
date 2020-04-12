@@ -14,9 +14,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
-import FabContainer, {
-  Fabs as FabContainerFabs,
-} from "components/FabContainer";
+import FabContainer from "components/FabContainer";
 import "./style";
 
 export default ({ friends, onDeleteFriend, onAddFriend }) => {
@@ -41,41 +39,38 @@ export default ({ friends, onDeleteFriend, onAddFriend }) => {
 
   return (
     <div className="my-friends">
+      {friends.length === 0 ? (
+        <div className="my-friends__title">
+          <Typography variant="h2">沒有朋友</Typography>
+        </div>
+      ) : (
+        <List>
+          {friends.map(({ island, resident }) => (
+            <ListItem key={island + resident}>
+              <ListItemText primary={island} secondary={resident} />
+              <ListItemSecondaryAction>
+                <IconButton
+                  edge="end"
+                  onClick={() => {
+                    setTargetFriend({
+                      island,
+                      resident,
+                    });
+                    setOpenDialogDeleteFriend(true);
+                  }}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+          ))}
+        </List>
+      )}
       <FabContainer>
-        {friends.length === 0 ? (
-          <div className="my-friends__title">
-            <Typography variant="h2">沒有朋友</Typography>
-          </div>
-        ) : (
-          <List>
-            {friends.map(({ island, resident }) => (
-              <ListItem key={island + resident}>
-                <ListItemText primary={island} secondary={resident} />
-                <ListItemSecondaryAction>
-                  <IconButton
-                    edge="end"
-                    onClick={() => {
-                      setTargetFriend({
-                        island,
-                        resident,
-                      });
-                      setOpenDialogDeleteFriend(true);
-                    }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-            ))}
-          </List>
-        )}
-        <FabContainerFabs>
-          <Fab color="primary" onClick={() => setOpenDialogAddFriend(true)}>
-            <AddIcon />
-          </Fab>
-        </FabContainerFabs>
+        <Fab color="primary" onClick={() => setOpenDialogAddFriend(true)}>
+          <AddIcon />
+        </Fab>
       </FabContainer>
-
       <Dialog
         open={openDialogDeleteFriend}
         onClose={handleCloseDialogDeleteFriend}

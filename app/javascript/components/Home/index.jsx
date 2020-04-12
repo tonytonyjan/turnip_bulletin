@@ -11,9 +11,7 @@ import SendIcon from "@material-ui/icons/Send";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import HotelIcon from "@material-ui/icons/Hotel";
 import PriceCard from "components/PriceCard";
-import FabContainer, {
-  Fabs as FabContainerFabs,
-} from "components/FabContainer";
+import FabContainer from "components/FabContainer";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -35,46 +33,44 @@ export default ({ priceRecords, onAddPrice, disabled }) => {
   const handleRefresh = () => window.location.reload();
   return (
     <div className="home">
-      <FabContainer>
-        {first && <PriceCard {...first} />}
-        <div className="home__table">
-          <TableContainer component={Paper}>
-            <Table aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell>島嶼</TableCell>
-                  <TableCell>島民</TableCell>
-                  <TableCell align="right">時價</TableCell>
-                  <TableCell>時間</TableCell>
+      {first && <PriceCard {...first} />}
+      <div className="home__table">
+        <TableContainer component={Paper}>
+          <Table aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>島嶼</TableCell>
+                <TableCell>島民</TableCell>
+                <TableCell align="right">時價</TableCell>
+                <TableCell>時間</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rest.map(({ id, island, resident, price, time }) => (
+                <TableRow key={id}>
+                  <TableCell component="th" scope="row">
+                    {island}
+                  </TableCell>
+                  <TableCell>{resident}</TableCell>
+                  <TableCell align="right">{price}</TableCell>
+                  <TableCell>{time}</TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {rest.map(({ id, island, resident, price, time }) => (
-                  <TableRow key={id}>
-                    <TableCell component="th" scope="row">
-                      {island}
-                    </TableCell>
-                    <TableCell>{resident}</TableCell>
-                    <TableCell align="right">{price}</TableCell>
-                    <TableCell>{time}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </div>
-        <FabContainerFabs>
-          <Fab onClick={handleRefresh}>
-            <RefreshIcon />
-          </Fab>
-          <Fab
-            disabled={disabled}
-            color="primary"
-            onClick={() => setOpenDialog(true)}
-          >
-            {disabled ? <HotelIcon /> : <SendIcon />}
-          </Fab>
-        </FabContainerFabs>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+      <FabContainer>
+        <Fab onClick={handleRefresh}>
+          <RefreshIcon />
+        </Fab>
+        <Fab
+          disabled={disabled}
+          color="primary"
+          onClick={() => setOpenDialog(true)}
+        >
+          {disabled ? <HotelIcon /> : <SendIcon />}
+        </Fab>
       </FabContainer>
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <form onSubmit={handleSubmit}>
