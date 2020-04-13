@@ -1,8 +1,8 @@
-import React, { useRef, Fragment } from "react";
+import React, { useRef, Fragment, useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 
-export default ({ island, resident, onSave }) => {
+export default ({ island, resident, onSave, onMount }) => {
   const inputIsland = useRef(null);
   const inputResident = useRef(null);
   const handleSubmit = (event) => {
@@ -12,6 +12,11 @@ export default ({ island, resident, onSave }) => {
       resident: inputResident.current.value,
     });
   };
+
+  useEffect(() => {
+    onMount();
+  }, []);
+
   return (
     <form onSubmit={handleSubmit}>
       <TextField

@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useRef } from "react";
+import React, { Fragment, useState, useRef, useEffect } from "react";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -20,7 +20,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import "./style";
 
-export default ({ priceRecords, onAddPrice, disabled }) => {
+export default ({ priceRecords, onAddPrice, disabled, onMount }) => {
   const [first, ...rest] = priceRecords;
   const [openDialog, setOpenDialog] = useState(false);
   const inputPrice = useRef(null);
@@ -31,6 +31,11 @@ export default ({ priceRecords, onAddPrice, disabled }) => {
     setOpenDialog(false);
   };
   const handleRefresh = () => window.location.reload();
+
+  useEffect(() => {
+    onMount("onMount");
+  }, []);
+
   return (
     <div className="home">
       {first && <PriceCard {...first} />}

@@ -12,6 +12,7 @@ import MyFriends from "components/MyFriends";
 import Settings from "components/Settings";
 import { makeStyles } from "@material-ui/core/styles";
 import db from "db";
+import { config as configGtag } from "gtag";
 import "./style";
 
 const useStyles = makeStyles(() => ({
@@ -22,6 +23,12 @@ const useStyles = makeStyles(() => ({
     bottom: 192,
   },
 }));
+
+const handleMountMap = {
+  home: () => configGtag({ page_path: "/" }),
+  myFriends: () => configGtag({ page_path: "/friends" }),
+  settings: () => configGtag({ page_path: "/settings" }),
+};
 
 export default () => {
   const classes = useStyles();
@@ -194,6 +201,7 @@ export default () => {
           priceRecords={priceRecords}
           onAddPrice={handleAddPrice}
           disabled={currentHour < 8 || currentHour >= 22}
+          onMount={handleMountMap[page]}
         />
       );
       break;
@@ -203,6 +211,7 @@ export default () => {
           friends={friends}
           onAddFriend={handleAddFriend}
           onDeleteFriend={handleDeleteFriend}
+          onMount={handleMountMap[page]}
         />
       );
       break;
@@ -212,6 +221,7 @@ export default () => {
           island={settings.island}
           resident={settings.resident}
           onSave={handleSave}
+          onMount={handleMountMap[page]}
         />
       );
       break;

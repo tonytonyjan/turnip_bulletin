@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -17,7 +17,7 @@ import AddIcon from "@material-ui/icons/Add";
 import FabContainer from "components/FabContainer";
 import "./style";
 
-export default ({ friends, onDeleteFriend, onAddFriend }) => {
+export default ({ friends, onDeleteFriend, onAddFriend, onMount }) => {
   const [targetFriend, setTargetFriend] = useState({
     island: "",
     resident: "",
@@ -36,6 +36,10 @@ export default ({ friends, onDeleteFriend, onAddFriend }) => {
     onAddFriend(inputIsland.current.value, inputResident.current.value);
     setOpenDialogAddFriend(false);
   };
+
+  useEffect(() => {
+    onMount();
+  }, []);
 
   return (
     <div className="my-friends">
