@@ -21,7 +21,7 @@ class PriceRecordsController < ApplicationController
   def create
     now = Time.now
     if (price_record = PriceRecord.find_by(
-      price_record_params.except(:price),
+      **price_record_params.except(:price),
       updated_at: ExpirationCalculator.interval(now.localtime(price_record_params[:timezone]))
     ))
       price_record.price = price_record_params[:price]
