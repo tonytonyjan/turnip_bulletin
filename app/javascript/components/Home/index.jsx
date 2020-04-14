@@ -1,16 +1,8 @@
 import React, { Fragment, useState, useRef, useEffect } from "react";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
 import Fab from "@material-ui/core/Fab";
 import SendIcon from "@material-ui/icons/Send";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import HotelIcon from "@material-ui/icons/Hotel";
-import PriceCard from "components/PriceCard";
 import FabContainer from "components/FabContainer";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -18,10 +10,24 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import Typography from "@material-ui/core/Typography";
+import ListItemMetadata from "components/ListItemMetadata";
+import IconTitle from "components/IconTitle";
+import Divider from "@material-ui/core/Divider";
 import "./style";
 
-export default ({ priceRecords, onAddPrice, disabled, onMount }) => {
-  const [first, ...rest] = priceRecords;
+const turnipImage = "/images/turnip.svg";
+
+export default ({
+  priceRecords,
+  expiredPriceRecords,
+  onAddPrice,
+  disabled,
+  onMount,
+}) => {
   const [openDialog, setOpenDialog] = useState(false);
   const inputPrice = useRef(null);
   const handleCloseDialog = () => setOpenDialog(false);
@@ -38,33 +44,49 @@ export default ({ priceRecords, onAddPrice, disabled, onMount }) => {
 
   return (
     <div className="home">
-      {first && <PriceCard {...first} />}
-      <div className="home__table">
-        <TableContainer component={Paper}>
-          <Table aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>島嶼</TableCell>
-                <TableCell>島民</TableCell>
-                <TableCell align="right">時價</TableCell>
-                <TableCell>時間</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rest.map(({ id, island, resident, price, time }) => (
-                <TableRow key={id}>
-                  <TableCell component="th" scope="row">
-                    {island}
-                  </TableCell>
-                  <TableCell>{resident}</TableCell>
-                  <TableCell align="right">{price}</TableCell>
-                  <TableCell>{time}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
+      <IconTitle image={turnipImage} text="即時菜價" />
+      {priceRecords.length === 0 ? (
+        <Typography variant="h3" component="h1" align="center">
+          沒有資料
+        </Typography>
+      ) : (
+        <List>
+          {priceRecords.map(({ id, island, resident, price, time }) => (
+            <Fragment key={id}>
+              <ListItem>
+                <ListItemText
+                  primary={price}
+                  secondary={`${island} ${resident}`}
+                />
+                <ListItemMetadata text={time} />
+              </ListItem>
+              <Divider />
+            </Fragment>
+          ))}
+        </List>
+      )}
+
+      <IconTitle image={turnipImage} text="逾期菜價" grayscale />
+      {expiredPriceRecords.length === 0 ? (
+        <Typography variant="h3" component="h1" align="center">
+          沒有資料
+        </Typography>
+      ) : (
+        <List>
+          {expiredPriceRecords.map(({ id, island, resident, price, time }) => (
+            <Fragment key={id}>
+              <ListItem>
+                <ListItemText
+                  primary={price}
+                  secondary={`${island} ${resident}`}
+                />
+                <ListItemMetadata text={time} />
+              </ListItem>
+              <Divider />
+            </Fragment>
+          ))}
+        </List>
+      )}
       <FabContainer>
         <Fab onClick={handleRefresh}>
           <RefreshIcon />

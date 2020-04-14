@@ -1,0 +1,19 @@
+.icon-title {
+  display: flex;
+  padding: 8px 0;
+  align-items: center;
+}
+
+.icon-title__image {
+  background: center / contain no-repeat;
+  width: 100px;
+  height: 56px;
+}
+
+.icon-title__image--grayscale {
+  filter: grayscale(1);
+}
+
+.icon-title__text {
+  margin-left: 16px;
+}

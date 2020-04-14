@@ -30,6 +30,14 @@ const handleMountMap = {
   settings: () => configGtag({ page_path: "/settings" }),
 };
 
+const twoDigit = (input) => ("0" + input).slice(-2, 2);
+
+const formatDuration = (duration) => {
+  return `${twoDigit(Math.floor(duration / 3600000))}:${twoDigit(
+    Math.ceil(Math.ceil(duration % 3600000) / 3600000)
+  )}`;
+};
+
 export default () => {
   const classes = useStyles();
   const [initialized, setInitialized] = useState(false);
@@ -148,10 +156,8 @@ export default () => {
             island: priceRecord.island,
             resident: priceRecord.resident,
             price: priceRecord.price,
-            time:
-              new Date(Date.parse(priceRecord.updated_at)).getHours() < 12
-                ? "上午"
-                : "下午",
+            expiration: new Date(Date.parse(priceRecord.expiration)),
+            updatedAt: new Date(Date.parse(priceRecord.updated_at)),
           }))
         );
       });
@@ -195,10 +201,28 @@ export default () => {
 
   switch (page) {
     case "home":
-      const currentHour = new Date().getHours();
+      const now = new Date();
+      const currentHour = now.getHours();
       children = (
         <Home
-          priceRecords={priceRecords}
+          priceRecords={priceRecords
+            .filter((priceRecord) => priceRecord.expiration > now)
+            .map(({ id, island, resident, price, expiration }) => ({
+              id,
+              island,
+              resident,
+              price,
+              time: `倒數 ${formatDuration(expiration - now)}`,
+            }))}
+          expiredPriceRecords={priceRecords
+            .filter((priceRecord) => priceRecord.expiration <= now)
+            .map(({ id, island, resident, price, expiration }) => ({
+              id,
+              island,
+              resident,
+              price,
+              time: `逾期 ${formatDuration(now - expiration)}`,
+            }))}
           onAddPrice={handleAddPrice}
           disabled={currentHour < 8 || currentHour >= 22}
           onMount={handleMountMap[page]}

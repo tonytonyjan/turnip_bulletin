@@ -13,7 +13,14 @@ class PriceRecordsController < ApplicationController
         Array(params[:friends]).map { |friend| PriceRecord::Friend.new(friend[:island], friend[:resident]) }
       ).to_a
     price_records.map! do |price_record|
-      price_record.attributes.slice('id', 'island', 'resident', 'price', 'updated_at')
+      {
+        id: price_record.id,
+        island: price_record.island,
+        resident: price_record.resident,
+        price: price_record.price,
+        expiration: price_record.expiration.utc,
+        updated_at: price_record.updated_at
+      }
     end
     render json: price_records
   end
