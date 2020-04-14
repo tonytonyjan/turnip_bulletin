@@ -92,9 +92,8 @@ export default ({
           <RefreshIcon />
         </Fab>
         <Fab
-          disabled={disabled}
           color="primary"
-          onClick={() => setOpenDialog(true)}
+          onClick={disabled ? null : () => setOpenDialog(true)}
         >
           {disabled ? <HotelIcon /> : <SendIcon />}
         </Fab>
