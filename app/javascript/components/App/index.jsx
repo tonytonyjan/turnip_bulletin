@@ -30,7 +30,7 @@ const handleMountMap = {
   settings: () => configGtag({ page_path: "/settings" }),
 };
 
-const twoDigit = (input) => ("0" + input).slice(-2, 2);
+const twoDigit = (input) => ("0" + input).slice(-2);
 
 const formatDuration = (duration) => {
   return `${twoDigit(Math.floor(duration / 3600000))}:${twoDigit(
