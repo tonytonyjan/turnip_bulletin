@@ -111,7 +111,7 @@ export default ({ friends, onDeleteFriend, onAddFriend, onMount }) => {
               autoFocus
               margin="normal"
               label="島嶼名稱"
-              placeholder="ex. 香菇寮島"
+              placeholder="ex. 今年一定島"
               fullWidth
             />
             <TextField
