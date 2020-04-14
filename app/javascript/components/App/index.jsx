@@ -7,9 +7,11 @@ import HomeIcon from "@material-ui/icons/Home";
 import PeopleIcon from "@material-ui/icons/People";
 import SettingsIcon from "@material-ui/icons/Settings";
 import CloseIcon from "@material-ui/icons/Close";
+import HelpIcon from "@material-ui/icons/Help";
 import Home from "components/Home";
 import MyFriends from "components/MyFriends";
 import Settings from "components/Settings";
+import About from "components/About";
 import { makeStyles } from "@material-ui/core/styles";
 import db from "db";
 import { config as configGtag } from "gtag";
@@ -28,6 +30,7 @@ const handleMountMap = {
   home: () => configGtag({ page_path: "/" }),
   myFriends: () => configGtag({ page_path: "/friends" }),
   settings: () => configGtag({ page_path: "/settings" }),
+  about: () => configGtag({ page_path: "/about" }),
 };
 
 const twoDigit = (input) => ("0" + input).slice(-2);
@@ -249,6 +252,9 @@ export default () => {
         />
       );
       break;
+    case "about":
+      children = <About onMount={handleMountMap[page]} />;
+      break;
     default:
       children = <h1>404</h1>;
       break;
@@ -277,6 +283,11 @@ export default () => {
             label="設定"
             value="settings"
             icon={<SettingsIcon />}
+          />
+          <BottomNavigationAction
+            label="說明"
+            value="about"
+            icon={<HelpIcon />}
           />
         </BottomNavigation>
       </div>
