@@ -11,7 +11,7 @@ class PriceRecordsController < ApplicationController
       PriceRecord
       .search_by_friends_order_by_price(
         Array(params[:friends]).map { |friend| PriceRecord::Friend.new(friend[:island], friend[:resident]) }
-      ).to_a
+      ).limit(50).to_a
     price_records.map! do |price_record|
       {
         id: price_record.id,
