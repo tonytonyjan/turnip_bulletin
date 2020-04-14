@@ -34,7 +34,7 @@ const twoDigit = (input) => ("0" + input).slice(-2, 2);
 
 const formatDuration = (duration) => {
   return `${twoDigit(Math.floor(duration / 3600000))}:${twoDigit(
-    Math.ceil(Math.ceil(duration % 3600000) / 3600000)
+    Math.ceil((duration % 3600000) / 60000)
   )}`;
 };
 
