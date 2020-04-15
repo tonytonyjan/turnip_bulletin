@@ -17,6 +17,30 @@ import db from "db";
 import { config as configGtag } from "gtag";
 import "./style";
 
+const handleClickSend = () =>
+  gtag("event", "FAB Send Price Click", {
+    event_category: "Homepage",
+  });
+const handleClickRefresh = () =>
+  gtag("event", "FAB Refresh Page Click", {
+    event_category: "Homepage",
+  });
+const handleSubmitPriceRecord = () => {
+  console.log("x");
+  gtag("event", "Dialog Send Click", {
+    event_category: "Homepage",
+  });
+};
+
+const handleClickAddFriend = () =>
+  gtag("event", "FAB Add Friend Click", {
+    event_category: "Friends Page",
+  });
+const handleSubmitNewFriend = () =>
+  gtag("event", "Dialog Save Click", {
+    event_category: "Friends Page",
+  });
+
 const useStyles = makeStyles(() => ({
   snackbar: {
     bottom: 72,
@@ -229,6 +253,9 @@ export default () => {
           onAddPrice={handleAddPrice}
           disabled={currentHour < 8 || currentHour >= 22}
           onMount={handleMountMap[page]}
+          onClickSend={handleClickSend}
+          onClickRefresh={handleClickRefresh}
+          onSubmit={handleSubmitPriceRecord}
         />
       );
       break;
@@ -239,6 +266,8 @@ export default () => {
           onAddFriend={handleAddFriend}
           onDeleteFriend={handleDeleteFriend}
           onMount={handleMountMap[page]}
+          onClickAddFriend={handleClickAddFriend}
+          onSubmit={handleSubmitNewFriend}
         />
       );
       break;

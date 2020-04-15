@@ -1,4 +1,10 @@
-import React, { Fragment, useState, useRef, useEffect } from "react";
+import React, {
+  Fragment,
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+} from "react";
 import Fab from "@material-ui/core/Fab";
 import SendIcon from "@material-ui/icons/Send";
 import RefreshIcon from "@material-ui/icons/Refresh";
@@ -27,20 +33,33 @@ export default ({
   onAddPrice,
   disabled,
   onMount,
+  onClickSend,
+  onClickRefresh,
+  onSubmit,
 }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const inputPrice = useRef(null);
   const handleCloseDialog = () => setOpenDialog(false);
   const handleSubmit = (event) => {
+    onSubmit();
     event.preventDefault();
     onAddPrice(inputPrice.current.value);
     setOpenDialog(false);
   };
-  const handleRefresh = () => window.location.reload();
+  const handleRefresh = () => {
+    onClickRefresh();
+    window.location.reload();
+  };
 
   useEffect(() => {
     onMount("onMount");
   }, []);
+
+  const handleClickSend = useCallback(() => {
+    if (disabled) return;
+    onClickSend();
+    setOpenDialog(true);
+  }, [onClickSend, disabled]);
 
   return (
     <div className="home">
@@ -91,10 +110,7 @@ export default ({
         <Fab onClick={handleRefresh}>
           <RefreshIcon />
         </Fab>
-        <Fab
-          color="primary"
-          onClick={disabled ? null : () => setOpenDialog(true)}
-        >
+        <Fab color="primary" onClick={handleClickSend}>
           {disabled ? <HotelIcon /> : <SendIcon />}
         </Fab>
       </FabContainer>

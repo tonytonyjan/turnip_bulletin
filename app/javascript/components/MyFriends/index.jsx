@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -17,7 +17,14 @@ import AddIcon from "@material-ui/icons/Add";
 import FabContainer from "components/FabContainer";
 import "./style";
 
-export default ({ friends, onDeleteFriend, onAddFriend, onMount }) => {
+export default ({
+  friends,
+  onDeleteFriend,
+  onAddFriend,
+  onMount,
+  onClickAddFriend,
+  onSubmit,
+}) => {
   const [targetFriend, setTargetFriend] = useState({
     island: "",
     resident: "",
@@ -32,6 +39,7 @@ export default ({ friends, onDeleteFriend, onAddFriend, onMount }) => {
   const handleCloseDialogAddFriend = () => setOpenDialogAddFriend(false);
 
   const handleSubmit = (event) => {
+    onSubmit();
     event.preventDefault();
     onAddFriend(inputIsland.current.value, inputResident.current.value);
     setOpenDialogAddFriend(false);
@@ -40,6 +48,11 @@ export default ({ friends, onDeleteFriend, onAddFriend, onMount }) => {
   useEffect(() => {
     onMount();
   }, []);
+
+  const handleClickAddFriend = useCallback(() => {
+    onClickAddFriend();
+    setOpenDialogAddFriend(true);
+  }, [onClickAddFriend]);
 
   return (
     <div className="my-friends">
@@ -71,7 +84,7 @@ export default ({ friends, onDeleteFriend, onAddFriend, onMount }) => {
         </List>
       )}
       <FabContainer>
-        <Fab color="primary" onClick={() => setOpenDialogAddFriend(true)}>
+        <Fab color="primary" onClick={handleClickAddFriend}>
           <AddIcon />
         </Fab>
       </FabContainer>
