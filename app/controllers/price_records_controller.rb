@@ -3,25 +3,29 @@
 require 'expiration_calculator'
 
 class PriceRecordsController < ApplicationController
+  SECONDS_10_HOURS = 36_000
+
   skip_before_action :verify_authenticity_token # TODO: this is workaround
 
   def index
-    params.permit(friends: %i[island resident])
+    permitted_params = params.permit(:since, friends: %i[island resident])
     price_records =
       PriceRecord
       .search_by_friends_order_by_price(
-        Array(params[:friends]).map { |friend| PriceRecord::Friend.new(friend[:island], friend[:resident]) }
-      ).limit(50).to_a
-    price_records.map! do |price_record|
-      {
-        id: price_record.id,
-        island: price_record.island,
-        resident: price_record.resident,
-        price: price_record.price,
-        expiration: price_record.expiration.utc,
-        updated_at: price_record.updated_at
-      }
-    end
+        Array(permitted_params[:friends]).map { |friend| PriceRecord::Friend.new(friend[:island], friend[:resident]) }
+      ).where('updated_at > ?', permitted_params[:since] || (Time.now - SECONDS_10_HOURS))
+      .order(price: :desc)
+      .limit(50)
+      .to_a.map! do |price_record|
+        {
+          id: price_record.id,
+          island: price_record.island,
+          resident: price_record.resident,
+          price: price_record.price,
+          expiration: price_record.expiration.utc,
+          updated_at: price_record.updated_at
+        }
+      end
     render json: price_records
   end
 

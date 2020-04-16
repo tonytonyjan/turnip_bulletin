@@ -3,7 +3,6 @@
 require 'expiration_calculator'
 
 class PriceRecord < ApplicationRecord
-  SECONDS_10_HOURS = 36_000
   Friend = Struct.new(:island, :resident)
 
   validates :island, :resident, presence: true
@@ -11,7 +10,7 @@ class PriceRecord < ApplicationRecord
   validates :timezone, presence: true, format: { with: /\A[+-]\d{2}:\d{2}\z/ }
   validate :validate_time, on: :create
 
-  def self.search_by_friends_order_by_price(friends, now: Time.now)
+  def self.search_by_friends_order_by_price(friends)
     where(
       Arel::Nodes::In.new(
         Arel::Nodes::Grouping.new(
@@ -30,8 +29,6 @@ class PriceRecord < ApplicationRecord
         end
       )
     )
-      .where('updated_at > ?', now - SECONDS_10_HOURS)
-      .order(price: :desc)
   end
 
   def expiration
