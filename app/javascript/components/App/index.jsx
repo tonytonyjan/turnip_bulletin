@@ -4,6 +4,7 @@ import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
 import HomeIcon from "@material-ui/icons/Home";
+import HistoryIcon from "@material-ui/icons/History";
 import PeopleIcon from "@material-ui/icons/People";
 import SettingsIcon from "@material-ui/icons/Settings";
 import CloseIcon from "@material-ui/icons/Close";
@@ -12,6 +13,7 @@ import Home from "components/Home";
 import MyFriends from "components/MyFriends";
 import Settings from "components/Settings";
 import About from "components/About";
+import History from "components/History";
 import { makeStyles } from "@material-ui/core/styles";
 import db from "db";
 import { config as configGtag } from "gtag";
@@ -55,6 +57,7 @@ const handleMountMap = {
   myFriends: () => configGtag({ page_path: "/friends" }),
   settings: () => configGtag({ page_path: "/settings" }),
   about: () => configGtag({ page_path: "/about" }),
+  history: () => configGtag({ page_path: "/history" }),
 };
 
 const twoDigit = (input) => ("0" + input).slice(-2);
@@ -73,6 +76,7 @@ export default () => {
   const [friends, setfriends] = useState([]);
   const [settings, setSettings] = useState({ island: "", resident: "" });
   const [snackbar, setSnackbar] = useState({ message: "", open: false });
+  const [myPriceRecords, setMyPriceRecords] = useState([]);
 
   const handleSnackbarClose = useCallback(() => {
     setSnackbar((state) => ({ ...state, open: false }));
@@ -224,6 +228,39 @@ export default () => {
     if (initialized) fetchPriceRecords();
   }, [initialized, friends, settings]);
 
+  useEffect(() => {
+    if (!initialized) return;
+    if (!settings.island || !settings.resident) return;
+
+    let oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+    const url = new URL("/price_records", window.location);
+    url.searchParams.append("since", oneWeekAgo.toISOString());
+    url.searchParams.append("friends[][island]", settings.island);
+    url.searchParams.append("friends[][resident]", settings.resident);
+    fetch(url)
+      .then((response) => response.json())
+      .then((priceRecords) => {
+        setMyPriceRecords(
+          priceRecords
+            .sort(({ updated_at: a }, { updated_at: b }) => {
+              if (a > b) return 1;
+              else if (a < b) return -1;
+              return 0;
+            })
+            .map((priceRecord) => ({
+              id: priceRecord.id,
+              island: priceRecord.island,
+              resident: priceRecord.resident,
+              price: priceRecord.price,
+              expiration: new Date(Date.parse(priceRecord.expiration)),
+              updatedAt: new Date(Date.parse(priceRecord.updated_at)),
+            }))
+        );
+      });
+  }, [initialized, settings]);
+
   let children;
 
   switch (page) {
@@ -284,6 +321,11 @@ export default () => {
     case "about":
       children = <About onMount={handleMountMap[page]} />;
       break;
+    case "history":
+      children = (
+        <History priceRecords={myPriceRecords} onMount={handleMountMap[page]} />
+      );
+      break;
     default:
       children = <h1>404</h1>;
       break;
@@ -307,6 +349,11 @@ export default () => {
             label="我的菜友"
             value="myFriends"
             icon={<PeopleIcon />}
+          />
+          <BottomNavigationAction
+            label="我的記錄"
+            value="history"
+            icon={<HistoryIcon />}
           />
           <BottomNavigationAction
             label="設定"
