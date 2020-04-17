@@ -40,7 +40,7 @@ export default ({ onMount, priceRecords }) => {
             <TableRow key={id}>
               <TableCell>{updatedAt.toLocaleDateString()}</TableCell>
               <TableCell>
-                {new Date().toLocaleDateString(undefined, {
+                {updatedAt.toLocaleDateString("zh-TW", {
                   weekday: "narrow",
                 })}
               </TableCell>
