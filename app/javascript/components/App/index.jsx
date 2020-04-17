@@ -280,7 +280,7 @@ export default () => {
               island,
               resident,
               price,
-              time: `倒數 ${formatDuration(expiration - now)}`,
+              time: `${formatDuration(expiration - now)} 後逾期`,
             }))}
           expiredPriceRecords={priceRecords
             .filter((priceRecord) => priceRecord.expiration <= now)
@@ -289,7 +289,7 @@ export default () => {
               island,
               resident,
               price,
-              time: `逾期 ${formatDuration(now - expiration)}`,
+              time: `${formatDuration(now - expiration)} 前逾期`,
             }))}
           onAddPrice={handleAddPrice}
           disabled={currentHour < 8 || currentHour >= 22}
