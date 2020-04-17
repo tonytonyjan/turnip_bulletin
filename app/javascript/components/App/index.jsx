@@ -28,6 +28,7 @@ const handleClickRefresh = () =>
 const handleSubmitPriceRecord = () => {
   gtag("event", "Dialog Send Click", {
     event_category: "Homepage",
+    value: 1,
   });
 };
 
@@ -38,6 +39,7 @@ const handleClickAddFriend = () =>
 const handleSubmitNewFriend = () =>
   gtag("event", "Dialog Save Click", {
     event_category: "Friends Page",
+    value: 1,
   });
 
 const useStyles = makeStyles(() => ({
