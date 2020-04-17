@@ -8,11 +8,9 @@ import HistoryIcon from "@material-ui/icons/History";
 import PeopleIcon from "@material-ui/icons/People";
 import SettingsIcon from "@material-ui/icons/Settings";
 import CloseIcon from "@material-ui/icons/Close";
-import HelpIcon from "@material-ui/icons/Help";
 import Home from "components/Home";
 import MyFriends from "components/MyFriends";
 import Settings from "components/Settings";
-import About from "components/About";
 import History from "components/History";
 import { makeStyles } from "@material-ui/core/styles";
 import db from "db";
@@ -56,7 +54,6 @@ const handleMountMap = {
   home: () => configGtag({ page_path: "/" }),
   myFriends: () => configGtag({ page_path: "/friends" }),
   settings: () => configGtag({ page_path: "/settings" }),
-  about: () => configGtag({ page_path: "/about" }),
   history: () => configGtag({ page_path: "/history" }),
 };
 
@@ -318,9 +315,6 @@ export default () => {
         />
       );
       break;
-    case "about":
-      children = <About onMount={handleMountMap[page]} />;
-      break;
     case "history":
       children = (
         <History priceRecords={myPriceRecords} onMount={handleMountMap[page]} />
@@ -359,11 +353,6 @@ export default () => {
             label="設定"
             value="settings"
             icon={<SettingsIcon />}
-          />
-          <BottomNavigationAction
-            label="說明"
-            value="about"
-            icon={<HelpIcon />}
           />
         </BottomNavigation>
       </div>
