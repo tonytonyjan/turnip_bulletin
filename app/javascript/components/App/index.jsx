@@ -26,7 +26,6 @@ const handleClickRefresh = () =>
     event_category: "Homepage",
   });
 const handleSubmitPriceRecord = () => {
-  console.log("x");
   gtag("event", "Dialog Send Click", {
     event_category: "Homepage",
   });
