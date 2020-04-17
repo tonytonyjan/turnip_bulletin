@@ -159,7 +159,10 @@ export default () => {
           },
         }),
       }).then((response) => {
-        if (response.ok) fetchPriceRecords();
+        if (response.ok) {
+          fetchPriceRecords();
+          fetchMyPriceRecords();
+        }
       });
     },
     [settings]
@@ -190,6 +193,38 @@ export default () => {
         );
       });
   }, [friends, settings]);
+
+  const fetchMyPriceRecords = useCallback(() => {
+    if (!settings.island || !settings.resident) return;
+
+    let oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+    const url = new URL("/price_records", window.location);
+    url.searchParams.append("since", oneWeekAgo.toISOString());
+    url.searchParams.append("friends[][island]", settings.island);
+    url.searchParams.append("friends[][resident]", settings.resident);
+    fetch(url)
+      .then((response) => response.json())
+      .then((priceRecords) => {
+        setMyPriceRecords(
+          priceRecords
+            .sort(({ updated_at: a }, { updated_at: b }) => {
+              if (a > b) return 1;
+              else if (a < b) return -1;
+              return 0;
+            })
+            .map((priceRecord) => ({
+              id: priceRecord.id,
+              island: priceRecord.island,
+              resident: priceRecord.resident,
+              price: priceRecord.price,
+              expiration: new Date(Date.parse(priceRecord.expiration)),
+              updatedAt: new Date(Date.parse(priceRecord.updated_at)),
+            }))
+        );
+      });
+  }, [settings]);
 
   useEffect(() => {
     db.then((db) => {
@@ -226,36 +261,7 @@ export default () => {
   }, [initialized, friends, settings]);
 
   useEffect(() => {
-    if (!initialized) return;
-    if (!settings.island || !settings.resident) return;
-
-    let oneWeekAgo = new Date();
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-
-    const url = new URL("/price_records", window.location);
-    url.searchParams.append("since", oneWeekAgo.toISOString());
-    url.searchParams.append("friends[][island]", settings.island);
-    url.searchParams.append("friends[][resident]", settings.resident);
-    fetch(url)
-      .then((response) => response.json())
-      .then((priceRecords) => {
-        setMyPriceRecords(
-          priceRecords
-            .sort(({ updated_at: a }, { updated_at: b }) => {
-              if (a > b) return 1;
-              else if (a < b) return -1;
-              return 0;
-            })
-            .map((priceRecord) => ({
-              id: priceRecord.id,
-              island: priceRecord.island,
-              resident: priceRecord.resident,
-              price: priceRecord.price,
-              expiration: new Date(Date.parse(priceRecord.expiration)),
-              updatedAt: new Date(Date.parse(priceRecord.updated_at)),
-            }))
-        );
-      });
+    if (initialized) fetchMyPriceRecords();
   }, [initialized, settings]);
 
   let children;
