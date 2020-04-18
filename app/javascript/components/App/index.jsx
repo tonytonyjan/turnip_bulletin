@@ -133,7 +133,7 @@ export default () => {
   });
 
   const handleAddPrice = useCallback(
-    (price) => {
+    (price, text) => {
       if (!settings.island || !settings.resident) {
         setSnackbar({
           open: true,
@@ -157,6 +157,7 @@ export default () => {
             resident: settings.resident,
             price,
             timezone,
+            text,
           },
         }),
       }).then((response) => {
@@ -188,6 +189,7 @@ export default () => {
             island: priceRecord.island,
             resident: priceRecord.resident,
             price: priceRecord.price,
+            text: priceRecord.text || "",
             expiration: new Date(Date.parse(priceRecord.expiration)),
             updatedAt: new Date(Date.parse(priceRecord.updated_at)),
           }))
@@ -275,21 +277,23 @@ export default () => {
         <Home
           priceRecords={priceRecords
             .filter((priceRecord) => priceRecord.expiration > now)
-            .map(({ id, island, resident, price, expiration }) => ({
+            .map(({ id, island, resident, price, expiration, text }) => ({
               id,
               island,
               resident,
               price,
               time: `${formatDuration(expiration - now)} 後逾期`,
+              text,
             }))}
           expiredPriceRecords={priceRecords
             .filter((priceRecord) => priceRecord.expiration <= now)
-            .map(({ id, island, resident, price, expiration }) => ({
+            .map(({ id, island, resident, price, expiration, text }) => ({
               id,
               island,
               resident,
               price,
               time: `${formatDuration(now - expiration)} 前逾期`,
+              text,
             }))}
           onAddPrice={handleAddPrice}
           disabled={currentHour < 8 || currentHour >= 22}

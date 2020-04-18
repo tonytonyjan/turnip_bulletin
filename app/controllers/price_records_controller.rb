@@ -22,6 +22,7 @@ class PriceRecordsController < ApplicationController
           island: price_record.island,
           resident: price_record.resident,
           price: price_record.price,
+          text: price_record.text,
           expiration: price_record.expiration.utc,
           updated_at: price_record.updated_at
         }
@@ -32,10 +33,10 @@ class PriceRecordsController < ApplicationController
   def create
     now = Time.now
     if (price_record = PriceRecord.find_by(
-      **price_record_params.except(:price),
+      **price_record_params.except(:price, :text),
       updated_at: ExpirationCalculator.interval(now.localtime(price_record_params[:timezone]))
     ))
-      price_record.price = price_record_params[:price]
+      price_record.attributes = price_record_params.permit(:price, :text)
     else
       price_record = PriceRecord.new(**price_record_params, created_at: now)
     end
@@ -51,7 +52,7 @@ class PriceRecordsController < ApplicationController
   def price_record_params
     params
       .require(:price_record)
-      .permit(:island, :resident, :price, :timezone)
+      .permit(:island, :resident, :price, :timezone, :text)
       .tap do |i|
         i.require(%i[island resident price timezone])
       end

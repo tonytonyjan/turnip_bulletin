@@ -39,11 +39,12 @@ export default ({
 }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const inputPrice = useRef(null);
+  const inputText = useRef(null);
   const handleCloseDialog = () => setOpenDialog(false);
   const handleSubmit = (event) => {
     onSubmit();
     event.preventDefault();
-    onAddPrice(inputPrice.current.value);
+    onAddPrice(inputPrice.current.value, inputText.current.value);
     setOpenDialog(false);
   };
   const handleRefresh = () => {
@@ -70,12 +71,19 @@ export default ({
         </Typography>
       ) : (
         <List>
-          {priceRecords.map(({ id, island, resident, price, time }) => (
+          {priceRecords.map(({ id, island, resident, price, time, text }) => (
             <Fragment key={id}>
               <ListItem>
                 <ListItemText
-                  primary={price}
-                  secondary={`${island} ${resident}`}
+                  primary={<div className="home__price">{price}</div>}
+                  secondary={
+                    <Fragment>
+                      <span className="home__island-name">{`${island} ${resident}`}</span>
+                      {text && (
+                        <span className="home__text">{` － ${text}`}</span>
+                      )}
+                    </Fragment>
+                  }
                 />
                 <ListItemMetadata text={time} />
               </ListItem>
@@ -92,18 +100,27 @@ export default ({
         </Typography>
       ) : (
         <List>
-          {expiredPriceRecords.map(({ id, island, resident, price, time }) => (
-            <Fragment key={id}>
-              <ListItem>
-                <ListItemText
-                  primary={price}
-                  secondary={`${island} ${resident}`}
-                />
-                <ListItemMetadata text={time} />
-              </ListItem>
-              <Divider />
-            </Fragment>
-          ))}
+          {expiredPriceRecords.map(
+            ({ id, island, resident, price, time, text }) => (
+              <Fragment key={id}>
+                <ListItem>
+                  <ListItemText
+                    primary={<div className="home__price">{price}</div>}
+                    secondary={
+                      <Fragment>
+                        <span className="home__island-name">{`${island} ${resident}`}</span>
+                        {text && (
+                          <span className="home__text">{` － ${text}`}</span>
+                        )}
+                      </Fragment>
+                    }
+                  />
+                  <ListItemMetadata text={time} />
+                </ListItem>
+                <Divider />
+              </Fragment>
+            )
+          )}
         </List>
       )}
       <FabContainer>
@@ -127,6 +144,14 @@ export default ({
               fullWidth
               type="number"
               inputProps={{ min: 1 }}
+            />
+            <TextField
+              inputRef={inputText}
+              inputProps={{ maxLength: 255 }}
+              margin="normal"
+              label="想說的話"
+              placeholder="ex. 心情、願望、島嶼密碼……"
+              fullWidth
             />
           </DialogContent>
           <DialogActions>

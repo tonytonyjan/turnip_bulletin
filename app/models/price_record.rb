@@ -9,6 +9,7 @@ class PriceRecord < ApplicationRecord
   validates :price, presence: true, numericality: { greater_than: 0 }
   validates :timezone, presence: true, format: { with: /\A[+-]\d{2}:\d{2}\z/ }
   validate :validate_time, on: :create
+  validates :text, length: { maximum: 255 }
 
   def self.search_by_friends_order_by_price(friends)
     where(
