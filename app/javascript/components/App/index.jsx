@@ -25,7 +25,7 @@ const handleClickRefresh = () =>
   gtag("event", "FAB Refresh Page Click", {
     event_category: "Homepage",
   });
-const handleSubmitPriceRecord = (event) => {
+const handleSubmitPriceRecord = (event) =>
   gtag("event", "Dialog Send Click", {
     event_category: "Homepage",
     event_label: new FormData(event.target).get("text")
@@ -33,8 +33,6 @@ const handleSubmitPriceRecord = (event) => {
       : "Without Message",
     value: 1,
   });
-};
-
 const handleClickAddFriend = () =>
   gtag("event", "FAB Add Friend Click", {
     event_category: "Friends Page",
@@ -44,7 +42,6 @@ const handleSubmitNewFriend = () =>
     event_category: "Friends Page",
     value: 1,
   });
-
 const handleClickPredictionLink = () =>
   gtag("event", "Outbound Click", {
     event_category: "History",
