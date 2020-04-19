@@ -58,7 +58,7 @@ export default ({
     <div className="my-friends">
       {friends.length === 0 ? (
         <div className="my-friends__title">
-          <Typography variant="h2">沒有朋友</Typography>
+          <Typography variant="h3">你沒有朋友</Typography>
         </div>
       ) : (
         <List>
