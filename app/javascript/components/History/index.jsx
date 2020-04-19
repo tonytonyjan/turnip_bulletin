@@ -35,7 +35,7 @@ const createPredictUrl = (priceRecords) => {
   return `https://turnipprophet.io/?prices=${prices.join(".")}`;
 };
 
-export default ({ onMount, priceRecords }) => {
+export default ({ onMount, priceRecords, onClickPredictionLink }) => {
   useEffect(() => {
     onMount();
   }, []);
@@ -75,6 +75,7 @@ export default ({ onMount, priceRecords }) => {
         href={createPredictUrl(priceRecords)}
         target="_blank"
         rel="noreferrer noopener"
+        onClick={onClickPredictionLink}
       >
         走勢預測
       </Button>

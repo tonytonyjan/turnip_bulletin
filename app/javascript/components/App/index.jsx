@@ -25,9 +25,12 @@ const handleClickRefresh = () =>
   gtag("event", "FAB Refresh Page Click", {
     event_category: "Homepage",
   });
-const handleSubmitPriceRecord = () => {
+const handleSubmitPriceRecord = (event) => {
   gtag("event", "Dialog Send Click", {
     event_category: "Homepage",
+    event_label: new FormData(event.target).get("text")
+      ? "With Message"
+      : "Without Message",
     value: 1,
   });
 };
@@ -40,6 +43,12 @@ const handleSubmitNewFriend = () =>
   gtag("event", "Dialog Save Click", {
     event_category: "Friends Page",
     value: 1,
+  });
+
+const handleClickPredictionLink = () =>
+  gtag("event", "Outbound Click", {
+    event_category: "History",
+    event_label: "https://turnipprophet.io",
   });
 
 const useStyles = makeStyles(() => ({
@@ -328,7 +337,11 @@ export default () => {
       break;
     case "history":
       children = (
-        <History priceRecords={myPriceRecords} onMount={handleMountMap[page]} />
+        <History
+          priceRecords={myPriceRecords}
+          onMount={handleMountMap[page]}
+          onClickPredictionLink={handleClickPredictionLink}
+        />
       );
       break;
     default:

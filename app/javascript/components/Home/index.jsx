@@ -42,7 +42,7 @@ export default ({
   const inputText = useRef(null);
   const handleCloseDialog = () => setOpenDialog(false);
   const handleSubmit = (event) => {
-    onSubmit();
+    onSubmit(event);
     event.preventDefault();
     onAddPrice(inputPrice.current.value, inputText.current.value);
     setOpenDialog(false);
@@ -144,6 +144,7 @@ export default ({
               fullWidth
               type="number"
               inputProps={{ min: 1 }}
+              name="price"
             />
             <TextField
               inputRef={inputText}
@@ -152,6 +153,7 @@ export default ({
               label="想說的話"
               placeholder="ex. 心情、願望、島嶼密碼……"
               fullWidth
+              name="text"
             />
           </DialogContent>
           <DialogActions>
