@@ -154,6 +154,7 @@ export default ({
               placeholder="ex. 心情、願望、島嶼密碼……"
               fullWidth
               name="text"
+              autoComplete="off"
             />
           </DialogContent>
           <DialogActions>
