@@ -27,6 +27,7 @@ export default ({ island, resident, onSave, onMount }) => {
         placeholder="ex. 今年一定島"
         fullWidth
         defaultValue={island}
+        helperText="「島」字可有可無，和你的菜友約定好即可"
       />
       <TextField
         inputRef={inputResident}
@@ -35,7 +36,7 @@ export default ({ island, resident, onSave, onMount }) => {
         label="我在島嶼上的名字"
         fullWidth
         defaultValue={resident}
-        placeholder="ex. 小明"
+        placeholder="ex. 老任"
       />
       <Button color="primary" type="submit">
         儲存
