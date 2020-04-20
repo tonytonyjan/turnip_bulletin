@@ -3,6 +3,8 @@
 require 'expiration_calculator'
 
 class PriceRecord < ApplicationRecord
+  SECONDS_1_WEEK = 604_800
+
   Friend = Struct.new(:island, :resident)
 
   validates :island, :resident, presence: true
@@ -30,6 +32,10 @@ class PriceRecord < ApplicationRecord
         end
       )
     )
+  end
+
+  def self.expired(now: Time.now)
+    where('updated_at < ?', now - SECONDS_1_WEEK)
   end
 
   def expiration
