@@ -44,6 +44,8 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
+
+      gtag('config', '<%= Rails.configuration.ga_measurement_id %>', { 'send_page_view': false });
     </script>
   </head>
 
