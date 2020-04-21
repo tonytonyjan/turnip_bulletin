@@ -5,7 +5,7 @@ require 'expiration_calculator'
 class PriceRecordsController < ApplicationController
   SECONDS_10_HOURS = 36_000
 
-  skip_before_action :verify_authenticity_token # TODO: this is workaround
+  skip_before_action :verify_authenticity_token
 
   def index
     permitted_params = params.permit(:since, friends: %i[island resident])
