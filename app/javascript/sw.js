@@ -14,14 +14,14 @@ precacheAndRoute(
       revision: manifest.find(({ url }) => url.startsWith("/packs/js/app-"))
         .revision,
     },
-    { url: "/favicon.ico", revision: "1" },
-    { url: "/images/touch/turnip192.png", revision: "1" },
+    { url: "/favicon.ico", revision: "2" },
+    { url: "/images/touch/turnip192.png", revision: "2" },
     {
       url:
         "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap",
       revision: "1",
     },
-    { url: "/images/turnip.svg", revision: "1" },
+    { url: "/images/turnip.svg", revision: "2" },
     { url: "/manifest.webmanifest", revision: "1" },
   ])
 );

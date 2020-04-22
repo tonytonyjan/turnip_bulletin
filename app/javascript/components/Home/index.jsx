@@ -123,9 +123,6 @@ export default ({
           )}
         </List>
       )}
-      <Typography variant="caption" component="div" align="center">
-        Icons made by Freepik from www.flaticon.com
-      </Typography>
       <FabContainer>
         <Fab onClick={handleRefresh}>
           <RefreshIcon />
