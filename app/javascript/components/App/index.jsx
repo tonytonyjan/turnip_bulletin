@@ -12,6 +12,8 @@ import Home from "components/Home";
 import MyFriends from "components/MyFriends";
 import Settings from "components/Settings";
 import History from "components/History";
+import MyIsland from "components/MyIsland";
+import ReturnablePage from "components/ReturnablePage";
 import { makeStyles } from "@material-ui/core/styles";
 import db from "db";
 import { config as configGtag } from "gtag";
@@ -70,6 +72,10 @@ const formatDuration = (duration) => {
   return `${twoDigit(Math.floor(duration / 3600000))}:${twoDigit(
     Math.ceil((duration % 3600000) / 60000)
   )}`;
+};
+
+const handleClickBack = () => {
+  window.history.back();
 };
 
 export default () => {
@@ -235,6 +241,34 @@ export default () => {
       });
   }, [settings]);
 
+  const handleClickPage = useCallback((page) => {
+    switch (page) {
+      case "about":
+        window.open("/about", "_blank");
+        break;
+      case "help":
+        window.open("/help", "_blank");
+        break;
+      default:
+        setPage(page);
+        window.history.pushState({ page }, null);
+        break;
+    }
+  }, []);
+
+  useEffect(() => {
+    window.history.replaceState({ page }, null);
+    const handlePopState = ({ state }) => {
+      if (!state) return;
+      const { page } = state;
+      if (!page) return;
+
+      setPage(page);
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
   useEffect(() => {
     db.then((db) => {
       Promise.all([
@@ -325,9 +359,7 @@ export default () => {
     case "settings":
       children = (
         <Settings
-          island={settings.island}
-          resident={settings.resident}
-          onSave={handleSave}
+          onClickPage={handleClickPage}
           onMount={handleMountMap[page]}
         />
       );
@@ -339,6 +371,17 @@ export default () => {
           onMount={handleMountMap[page]}
           onClickPredictionLink={handleClickPredictionLink}
         />
+      );
+      break;
+    case "myIsland":
+      children = (
+        <ReturnablePage title="我的島嶼" onClickBack={handleClickBack}>
+          <MyIsland
+            island={settings.island}
+            resident={settings.resident}
+            onSave={handleSave}
+          />
+        </ReturnablePage>
       );
       break;
     default:
@@ -353,7 +396,7 @@ export default () => {
         <BottomNavigation
           showLabels
           value={page}
-          onChange={(_, newValue) => setPage(newValue)}
+          onChange={(_, newValue) => handleClickPage(newValue)}
         >
           <BottomNavigationAction
             label="即時菜價"

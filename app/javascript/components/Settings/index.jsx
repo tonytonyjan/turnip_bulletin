@@ -1,46 +1,34 @@
-import React, { useRef, Fragment, useEffect } from "react";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
+import React, { Fragment, useEffect, useCallback } from "react";
+import ListSubheader from "@material-ui/core/ListSubheader";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import Avatar from "@material-ui/core/Avatar";
+import ListItemText from "@material-ui/core/ListItemText";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
-export default ({ island, resident, onSave, onMount }) => {
-  const inputIsland = useRef(null);
-  const inputResident = useRef(null);
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    onSave({
-      island: inputIsland.current.value,
-      resident: inputResident.current.value,
-    });
-  };
-
+export default ({ onClickPage, onMount }) => {
   useEffect(() => {
     onMount();
   }, []);
 
   return (
-    <form onSubmit={handleSubmit}>
-      <TextField
-        inputRef={inputIsland}
-        required
-        margin="normal"
-        label="我的島嶼名稱"
-        placeholder="ex. 今年一定島"
-        fullWidth
-        defaultValue={island}
-        helperText="「島」字可有可無，和你的菜友約定好即可"
-      />
-      <TextField
-        inputRef={inputResident}
-        required
-        margin="normal"
-        label="我在島嶼上的名字"
-        fullWidth
-        defaultValue={resident}
-        placeholder="ex. 老任"
-      />
-      <Button color="primary" type="submit">
-        儲存
-      </Button>
-    </form>
+    <Fragment>
+      <List component="nav" subheader={<ListSubheader>偏好設定</ListSubheader>}>
+        <ListItem
+          button
+          onClick={useCallback(() => {
+            onClickPage("myIsland");
+          }, [onClickPage])}
+        >
+          <ListItemAvatar>
+            <Avatar>
+              <AccountCircleIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText primary="我的島嶼" secondary="設定島嶼名稱與名字" />
+        </ListItem>
+      </List>
+    </Fragment>
   );
 };
