@@ -23,9 +23,8 @@ import Typography from "@material-ui/core/Typography";
 import ListItemMetadata from "components/ListItemMetadata";
 import IconTitle from "components/IconTitle";
 import Divider from "@material-ui/core/Divider";
+import turnipImage from "images/turnip.svg";
 import "./style";
-
-const turnipImage = "/images/turnip.svg";
 
 export default ({
   priceRecords,
