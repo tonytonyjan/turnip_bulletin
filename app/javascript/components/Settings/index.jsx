@@ -5,7 +5,9 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 import ListItemText from "@material-ui/core/ListItemText";
+import InfoIcon from "@material-ui/icons/Info";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import HelpIcon from "@material-ui/icons/Help";
 import TwitterIcon from "@material-ui/icons/Twitter";
 
 export default ({ onClickPage, onMount }) => {
@@ -37,6 +39,22 @@ export default ({ onClickPage, onMount }) => {
         <ListItem
           button
           onClick={useCallback(() => {
+            onClickPage("about");
+          }, [onClickPage])}
+        >
+          <ListItemAvatar>
+            <Avatar>
+              <InfoIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary="關於動森股友會"
+            secondary="專案、團隊、原始碼"
+          />
+        </ListItem>
+        <ListItem
+          button
+          onClick={useCallback(() => {
             onClickPage("news");
           }, [onClickPage])}
         >
@@ -46,6 +64,19 @@ export default ({ onClickPage, onMount }) => {
             </Avatar>
           </ListItemAvatar>
           <ListItemText primary="最新消息" secondary="官方 Twitter" />
+        </ListItem>
+        <ListItem
+          button
+          onClick={useCallback(() => {
+            onClickPage("help");
+          }, [onClickPage])}
+        >
+          <ListItemAvatar>
+            <Avatar>
+              <HelpIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText primary="幫助中心" secondary="使用說明與 FAQ" />
         </ListItem>
       </List>
     </Fragment>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-71890573-2"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "<%= Rails.configuration.ga_measurement_id %>");
+    </script>
+    <meta charset="UTF-8" />
+    <%= favicon_link_tag asset_pack_path('media/images/turnip.ico') %>
+    <title>
+      <%= content_for?(:title) ? "動森股友會 - #{yield(:title)}" : '動森股友會' %>
+    </title>
+    <%= csp_meta_tag %>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/sakura.css@1.0.0/css/sakura.css"
+      type="text/css"
+    />
+    <style>
+      h2 {
+        padding-left: 56px;
+        background: url("<%= asset_pack_path 'media/images/turnip.svg' %>")
+          no-repeat left center / contain;
+      }
+      nav > ol {
+        list-style: none;
+        display: flex;
+        margin: 0;
+        padding: 0;
+      }
+      nav > ol > li {
+        margin-left: 16px;
+        font-family: Verdana, Geneva, sans-serif;
+      }
+      .card {
+        display: flex;
+        align-items: start;
+      }
+      .card + p + .card {
+        margin-top: 32px;
+      }
+      .card__profile {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .card__name {
+        margin: 8px 0 0 0;
+        font-size: 1.2em;
+      }
+      .card__email {
+        font-size: .7em;
+      }
+      .card__avatar {
+        border-radius: 50%;
+        max-width: 120px;
+        max-height: 120px;
+        object-fit: cover;
+      }
+      .card__table {
+        margin-left: 16px;
+      }
+      .card__table td:first-child {
+        width: 80px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav>
+      <ol>
+        <li>
+          <a id="root_link" href="/">動森股友會</a>
+        </li>
+        <li><a href="/about">關於我們</a></li>
+        <li><a href="/help">幫助中心</a></li>
+      </ol>
+    </nav>
+    <script>
+      document
+        .getElementById("root_link")
+        .addEventListener("click", (event) => {
+          if (
+            document.referrer === "https://turnip-dev.tonytonyjan.net:3000/"
+          ) {
+            event.preventDefault();
+            window.close();
+          }
+        });
+    </script>
+    <%= yield %>
+  </body>
+</html>
