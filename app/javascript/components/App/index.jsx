@@ -430,7 +430,7 @@ export default () => {
       </div>
       <Snackbar
         className={
-          page === "settings" ? classes.snackbar : classes.snackbarAboveFab
+          page === "home" ? classes.snackbarAboveFab : classes.snackbar
         }
         open={snackbar.open}
         autoHideDuration={6000}
