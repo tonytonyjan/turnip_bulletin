@@ -14,6 +14,7 @@ import Settings from "components/Settings";
 import History from "components/History";
 import MyIsland from "components/MyIsland";
 import ReturnablePage from "components/ReturnablePage";
+import Twitter from "components/Twitter";
 import { makeStyles } from "@material-ui/core/styles";
 import db from "db";
 import { config as configGtag } from "gtag";
@@ -381,6 +382,13 @@ export default () => {
             resident={settings.resident}
             onSave={handleSave}
           />
+        </ReturnablePage>
+      );
+      break;
+    case "news":
+      children = (
+        <ReturnablePage title="最新消息" onClickBack={handleClickBack}>
+          <Twitter twitterId="TurnipFriends" />
         </ReturnablePage>
       );
       break;
