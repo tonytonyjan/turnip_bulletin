@@ -18,6 +18,7 @@ import Twitter from "components/Twitter";
 import { makeStyles } from "@material-ui/core/styles";
 import db from "db";
 import { config as configGtag } from "gtag";
+import { adjustTimezone } from "utils";
 import "./style";
 
 const handleClickSend = () =>
@@ -79,13 +80,24 @@ const handleClickBack = () => {
   window.history.back();
 };
 
+const defaultSettings = {
+  island: "",
+  resident: "",
+  timezone: (() => {
+    const timezone = new Date().getTimezoneOffset();
+    return `${timezone > 0 ? "-" : "+"}${(
+      "0" + Math.floor(Math.abs(timezone / 60))
+    ).slice(-2)}:${("0" + (Math.abs(timezone) % 60)).slice(-2)}`;
+  })(),
+};
+
 export default () => {
   const classes = useStyles();
   const [initialized, setInitialized] = useState(false);
   const [page, setPage] = useState("home");
   const [priceRecords, setPriceRecords] = useState([]);
   const [friends, setfriends] = useState([]);
-  const [settings, setSettings] = useState({ island: "", resident: "" });
+  const [settings, setSettings] = useState(defaultSettings);
   const [snackbar, setSnackbar] = useState({ message: "", open: false });
   const [myPriceRecords, setMyPriceRecords] = useState([]);
 
@@ -94,14 +106,22 @@ export default () => {
   }, [setSnackbar]);
 
   const handleSave = useCallback(
-    ({ island, resident }) => {
+    (upcomingSettings) => {
+      const newSettings = Object.entries(upcomingSettings).reduce(
+        (result, [key, value]) => {
+          result[key] = value || defaultSettings[key];
+          return result;
+        },
+        {}
+      );
       db.then((db) => {
         const transaction = db.transaction("settings", "readwrite");
         const store = transaction.objectStore("settings");
-        store.put(island, "island");
-        store.put(resident, "resident");
+        Object.entries(newSettings).forEach(([key, value]) =>
+          store.put(value, key)
+        );
         transaction.oncomplete = () => {
-          setSettings({ island, resident });
+          setSettings(newSettings);
           setSnackbar({ message: "已儲存", open: true });
         };
       });
@@ -154,10 +174,6 @@ export default () => {
         });
         return;
       }
-      let timezone = new Date().getTimezoneOffset();
-      timezone = `${timezone > 0 ? "-" : "+"}${(
-        "0" + Math.abs(timezone / 60)
-      ).slice(-2)}:00`;
 
       fetch("/price_records", {
         method: "POST",
@@ -169,7 +185,7 @@ export default () => {
             island: settings.island,
             resident: settings.resident,
             price,
-            timezone,
+            timezone: settings.timezone,
             text,
           },
         }),
@@ -205,6 +221,7 @@ export default () => {
             text: priceRecord.text || "",
             expiration: new Date(Date.parse(priceRecord.expiration)),
             updatedAt: new Date(Date.parse(priceRecord.updated_at)),
+            timezone: priceRecord.timezone,
           }))
         );
       });
@@ -237,6 +254,7 @@ export default () => {
               price: priceRecord.price,
               expiration: new Date(Date.parse(priceRecord.expiration)),
               updatedAt: new Date(Date.parse(priceRecord.updated_at)),
+              timezone: priceRecord.timezone,
             }))
         );
       });
@@ -281,13 +299,13 @@ export default () => {
             resolve(friends);
         }),
         new Promise((resolve) => {
-          const settings = {};
+          const settings = { ...defaultSettings };
           db
             .transaction("settings")
             .objectStore("settings")
             .openCursor().onsuccess = ({ target: { result: cursor } }) => {
             if (cursor) {
-              settings[cursor.key] = cursor.value;
+              settings[cursor.key] = cursor.value || settings[cursor.key];
               cursor.continue();
             } else resolve(settings);
           };
@@ -313,7 +331,7 @@ export default () => {
   switch (page) {
     case "home":
       const now = new Date();
-      const currentHour = now.getHours();
+      const currentHour = adjustTimezone(now, settings.timezone).getHours();
       children = (
         <Home
           priceRecords={priceRecords
@@ -370,6 +388,7 @@ export default () => {
         <History
           priceRecords={myPriceRecords}
           onMount={handleMountMap[page]}
+          timezone={settings.timezone}
           onClickPredictionLink={handleClickPredictionLink}
         />
       );
@@ -380,6 +399,7 @@ export default () => {
           <MyIsland
             island={settings.island}
             resident={settings.resident}
+            timezone={settings.timezone}
             onSave={handleSave}
           />
         </ReturnablePage>

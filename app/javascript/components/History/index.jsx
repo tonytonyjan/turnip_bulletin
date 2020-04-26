@@ -8,6 +8,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import { adjustTimezone } from "utils";
 
 const createPredictUrl = (priceRecords) => {
   const prices = new Array(13);
@@ -23,7 +24,7 @@ const createPredictUrl = (priceRecords) => {
   return `https://turnipprophet.io/?prices=${prices.join(".")}`;
 };
 
-export default ({ onMount, priceRecords, onClickPredictionLink }) => {
+export default ({ onMount, priceRecords, timezone, onClickPredictionLink }) => {
   useEffect(() => {
     onMount();
   }, []);
@@ -41,20 +42,30 @@ export default ({ onMount, priceRecords, onClickPredictionLink }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {priceRecords.map(({ id, updatedAt, price }) => (
-              <TableRow key={id}>
-                <TableCell>{updatedAt.toLocaleDateString()}</TableCell>
-                <TableCell>
-                  {updatedAt.toLocaleDateString("zh-TW", {
-                    weekday: "narrow",
-                  })}
-                </TableCell>
-                <TableCell>
-                  {updatedAt.getHours() < 12 ? "上午" : "下午"}
-                </TableCell>
-                <TableCell align="right">{price}</TableCell>
-              </TableRow>
-            ))}
+            {priceRecords
+              .filter(
+                ({ timezone: priceRecordTimezone }) =>
+                  timezone === priceRecordTimezone
+              )
+              .map(({ id, updatedAt, price }) => {
+                const newUpdatedAt = adjustTimezone(updatedAt, timezone);
+                return (
+                  <TableRow key={id}>
+                    <TableCell>
+                      {newUpdatedAt.toLocaleDateString("zh-TW")}
+                    </TableCell>
+                    <TableCell>
+                      {newUpdatedAt.toLocaleDateString("zh-TW", {
+                        weekday: "narrow",
+                      })}
+                    </TableCell>
+                    <TableCell>
+                      {newUpdatedAt.getHours() < 12 ? "上午" : "下午"}
+                    </TableCell>
+                    <TableCell align="right">{price}</TableCell>
+                  </TableRow>
+                );
+              })}
           </TableBody>
         </Table>
       </TableContainer>

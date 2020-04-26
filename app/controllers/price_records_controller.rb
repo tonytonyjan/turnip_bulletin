@@ -24,7 +24,8 @@ class PriceRecordsController < ApplicationController
           price: price_record.price,
           text: price_record.text,
           expiration: price_record.expiration.utc,
-          updated_at: price_record.updated_at
+          updated_at: price_record.updated_at,
+          timezone: price_record.timezone
         }
       end
     render json: price_records
