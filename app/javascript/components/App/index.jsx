@@ -392,7 +392,6 @@ export default () => {
             ({ timezone }) => timezone === settings.timezone
           )}
           onMount={handleMountMap[page]}
-          timezone={settings.timezone}
           onClickPredictionLink={handleClickPredictionLink}
         />
       );

@@ -23,7 +23,7 @@ const createPredictUrl = (priceRecords) => {
   return `https://turnipprophet.io/?prices=${prices.join(".")}`;
 };
 
-export default ({ onMount, priceRecords, timezone, onClickPredictionLink }) => {
+export default ({ onMount, priceRecords, onClickPredictionLink }) => {
   useEffect(() => {
     onMount();
   }, []);
