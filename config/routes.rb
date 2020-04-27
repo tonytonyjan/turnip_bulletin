@@ -5,6 +5,10 @@ Rails.application.routes.draw do
     get 'about'
     get 'help'
   end
-  resources :price_records, only: %i[index create]
+  resources :price_records, only: %i[index create] do
+    collection do
+      patch 'update_timezone'
+    end
+  end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

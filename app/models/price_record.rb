@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'expiration_calculator'
+require 'backward'
 
 class PriceRecord < ApplicationRecord
   SECONDS_1_WEEK = 604_800
@@ -9,7 +10,8 @@ class PriceRecord < ApplicationRecord
 
   validates :island, :resident, presence: true
   validates :price, presence: true, numericality: { greater_than: 0 }
-  validates :timezone, presence: true, inclusion: { in: TZInfo::Timezone.all_identifiers }
+  validates :timezone, presence: true, format: { with: /\A[+-]\d{2}:\d{2}\z/ }, if: -> { Backward.timezone_old_form?(timezone) }
+  validates :timezone, presence: true, inclusion: { in: TZInfo::Timezone.all_identifiers }, if: -> { !Backward.timezone_old_form?(timezone) }
   validate :validate_time, on: :create
   validates :text, length: { maximum: 255 }
 
@@ -39,7 +41,7 @@ class PriceRecord < ApplicationRecord
   end
 
   def expiration
-    ExpirationCalculator.end(updated_at.in_time_zone(timezone).to_time)
+    ExpirationCalculator.end(Backward.with_timezone_offset(updated_at, timezone))
   end
 
   def expired?(now: Time.now)
@@ -47,7 +49,7 @@ class PriceRecord < ApplicationRecord
   end
 
   def validate_time
-    if created_at && timezone && ExpirationCalculator.interval(created_at.in_time_zone(timezone).to_time).include?(created_at)
+    if created_at && timezone && ExpirationCalculator.interval(Backward.with_timezone_offset(created_at, timezone)).include?(created_at)
       return
     end
 

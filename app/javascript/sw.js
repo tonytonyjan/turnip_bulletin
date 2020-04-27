@@ -1,6 +1,7 @@
 import { precacheAndRoute } from "workbox-precaching";
 import { skipWaiting, clientsClaim } from "workbox-core";
 import * as googleAnalytics from "workbox-google-analytics";
+import db from "db";
 
 skipWaiting();
 clientsClaim();
@@ -44,4 +45,34 @@ self.addEventListener("activate", (event) => {
       )
       .then(() => clients.claim())
   );
+});
+
+self.addEventListener("install", () => {
+  db.then((db) => {
+    new Promise((resolve) => {
+      const settings = {};
+      db
+        .transaction("settings")
+        .objectStore("settings")
+        .openCursor().onsuccess = ({ target: { result: cursor } }) => {
+        if (cursor) {
+          settings[cursor.key] = cursor.value;
+          cursor.continue();
+        } else resolve(settings);
+      };
+    }).then(({ island, resident, timezone }) => {
+      console.log(island, resident, timezone);
+      if (!island || !resident) return;
+      fetch("/price_records/update_timezone", {
+        headers: { "Content-Type": "application/json" },
+        method: "PATCH",
+        body: JSON.stringify({
+          island,
+          resident,
+          timezone:
+            timezone || Intl.DateTimeFormat().resolvedOptions().timeZone,
+        }),
+      });
+    });
+  });
 });

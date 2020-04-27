@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'expiration_calculator'
+require 'backward'
 
 class PriceRecordsController < ApplicationController
   SECONDS_10_HOURS = 36_000
@@ -35,7 +36,7 @@ class PriceRecordsController < ApplicationController
     now = Time.now
     if (price_record = PriceRecord.find_by(
       **price_record_params.except(:price, :text),
-      updated_at: ExpirationCalculator.interval(now.in_time_zone(price_record_params[:timezone]).to_time)
+      updated_at: ExpirationCalculator.interval(Backward.with_timezone_offset(now, price_record_params[:timezone]))
     ))
       price_record.attributes = price_record_params.permit(:price, :text)
     else
@@ -46,6 +47,14 @@ class PriceRecordsController < ApplicationController
     else
       render json: price_record.errors, status: :unprocessable_entity
     end
+  end
+
+  def update_timezone
+    params.require(%i[island resident timezone])
+    PriceRecord.where(
+      params.permit(:island, :resident)
+    ).update_all(timezone: params[:timezone])
+    render json: nil
   end
 
   private

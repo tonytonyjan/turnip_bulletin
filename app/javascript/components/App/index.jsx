@@ -115,6 +115,17 @@ export default () => {
           store.put(value, key)
         );
         transaction.oncomplete = () => {
+          if (newSettings.timezone !== settings.timezone) {
+            fetch("/price_records/update_timezone", {
+              headers: { "Content-Type": "application/json" },
+              method: "PATCH",
+              body: JSON.stringify({
+                island: newSettings.island,
+                resident: newSettings.resident,
+                timezone: newSettings.timezone,
+              }),
+            });
+          }
           setSettings(newSettings);
           setSnackbar({ message: "已儲存", open: true });
         };
