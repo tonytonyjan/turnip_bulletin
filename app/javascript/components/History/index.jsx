@@ -8,7 +8,6 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import { adjustTimezone } from "utils";
 
 const createPredictUrl = (priceRecords) => {
   const prices = new Array(13);
@@ -42,30 +41,35 @@ export default ({ onMount, priceRecords, timezone, onClickPredictionLink }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {priceRecords
-              .filter(
-                ({ timezone: priceRecordTimezone }) =>
-                  timezone === priceRecordTimezone
-              )
-              .map(({ id, updatedAt, price }) => {
-                const newUpdatedAt = adjustTimezone(updatedAt, timezone);
-                return (
-                  <TableRow key={id}>
-                    <TableCell>
-                      {newUpdatedAt.toLocaleDateString("zh-TW")}
-                    </TableCell>
-                    <TableCell>
-                      {newUpdatedAt.toLocaleDateString("zh-TW", {
-                        weekday: "narrow",
-                      })}
-                    </TableCell>
-                    <TableCell>
-                      {newUpdatedAt.getHours() < 12 ? "上午" : "下午"}
-                    </TableCell>
-                    <TableCell align="right">{price}</TableCell>
-                  </TableRow>
-                );
-              })}
+            {priceRecords.map(({ id, updatedAt, price, timezone }) => {
+              return (
+                <TableRow key={id}>
+                  <TableCell>
+                    {updatedAt.toLocaleDateString("zh-TW", {
+                      timeZone: timezone,
+                    })}
+                  </TableCell>
+                  <TableCell>
+                    {updatedAt.toLocaleDateString("zh-TW", {
+                      weekday: "narrow",
+                      timeZone: timezone,
+                    })}
+                  </TableCell>
+                  <TableCell>
+                    {
+                      Intl.DateTimeFormat("zh-TW", {
+                        hour12: true,
+                        hour: "numeric",
+                        timeZone: timezone,
+                      })
+                        .formatToParts(updatedAt)
+                        .find(({ type }) => type === "dayPeriod").value
+                    }
+                  </TableCell>
+                  <TableCell align="right">{price}</TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>

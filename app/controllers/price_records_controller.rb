@@ -35,7 +35,7 @@ class PriceRecordsController < ApplicationController
     now = Time.now
     if (price_record = PriceRecord.find_by(
       **price_record_params.except(:price, :text),
-      updated_at: ExpirationCalculator.interval(now.localtime(price_record_params[:timezone]))
+      updated_at: ExpirationCalculator.interval(now.in_time_zone(price_record_params[:timezone]).to_time)
     ))
       price_record.attributes = price_record_params.permit(:price, :text)
     else

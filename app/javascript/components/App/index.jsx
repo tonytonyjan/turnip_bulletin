@@ -18,7 +18,6 @@ import Twitter from "components/Twitter";
 import { makeStyles } from "@material-ui/core/styles";
 import db from "db";
 import { config as configGtag } from "gtag";
-import { adjustTimezone } from "utils";
 import "./style";
 
 const handleClickSend = () =>
@@ -83,12 +82,7 @@ const handleClickBack = () => {
 const defaultSettings = {
   island: "",
   resident: "",
-  timezone: (() => {
-    const timezone = new Date().getTimezoneOffset();
-    return `${timezone > 0 ? "-" : "+"}${(
-      "0" + Math.floor(Math.abs(timezone / 60))
-    ).slice(-2)}:${("0" + (Math.abs(timezone) % 60)).slice(-2)}`;
-  })(),
+  timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
 };
 
 export default () => {
@@ -331,7 +325,15 @@ export default () => {
   switch (page) {
     case "home":
       const now = new Date();
-      const currentHour = adjustTimezone(now, settings.timezone).getHours();
+      const currentHour = parseInt(
+        Intl.DateTimeFormat("zh-TW", {
+          hour12: false,
+          hour: "numeric",
+          timeZone: settings.timezone,
+        })
+          .formatToParts(now)
+          .find(({ type }) => type === "hour").value
+      );
       children = (
         <Home
           priceRecords={priceRecords
@@ -386,7 +388,9 @@ export default () => {
     case "history":
       children = (
         <History
-          priceRecords={myPriceRecords}
+          priceRecords={myPriceRecords.filter(
+            ({ timezone }) => timezone === settings.timezone
+          )}
           onMount={handleMountMap[page]}
           timezone={settings.timezone}
           onClickPredictionLink={handleClickPredictionLink}

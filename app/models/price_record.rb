@@ -9,7 +9,7 @@ class PriceRecord < ApplicationRecord
 
   validates :island, :resident, presence: true
   validates :price, presence: true, numericality: { greater_than: 0 }
-  validates :timezone, presence: true, format: { with: /\A[+-]\d{2}:\d{2}\z/ }
+  validates :timezone, presence: true, inclusion: { in: TZInfo::Timezone.all_identifiers }
   validate :validate_time, on: :create
   validates :text, length: { maximum: 255 }
 
@@ -39,7 +39,7 @@ class PriceRecord < ApplicationRecord
   end
 
   def expiration
-    ExpirationCalculator.end(updated_at.localtime(timezone))
+    ExpirationCalculator.end(updated_at.in_time_zone(timezone).to_time)
   end
 
   def expired?(now: Time.now)
@@ -47,7 +47,7 @@ class PriceRecord < ApplicationRecord
   end
 
   def validate_time
-    if created_at && timezone && ExpirationCalculator.interval(created_at.localtime(timezone)).include?(created_at)
+    if created_at && timezone && ExpirationCalculator.interval(created_at.in_time_zone(timezone).to_time).include?(created_at)
       return
     end
 
