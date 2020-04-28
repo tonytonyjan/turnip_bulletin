@@ -61,7 +61,6 @@ self.addEventListener("install", () => {
         } else resolve(settings);
       };
     }).then(({ island, resident, timezone }) => {
-      console.log(island, resident, timezone);
       if (!island || !resident) return;
       fetch("/price_records/update_timezone", {
         headers: { "Content-Type": "application/json" },
