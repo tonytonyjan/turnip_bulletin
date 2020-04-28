@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import zones from "./zones.json";
@@ -13,10 +13,13 @@ const zoneOptions = zones
     offsetName: timezoneToOffsetName(id),
   }));
 
-export default ({ island, resident, timezone, onSave }) => {
+export default ({ island, resident, timezone, onSave, onMount }) => {
   const inputIsland = useRef(null);
   const inputResident = useRef(null);
   const inputTimezone = useRef(null);
+  useEffect(() => {
+    onMount();
+  }, []);
   const handleSubmit = (event) => {
     event.preventDefault();
     onSave(

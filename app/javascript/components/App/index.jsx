@@ -65,6 +65,8 @@ const handleMountMap = {
   myFriends: () => configGtag({ page_path: "/friends" }),
   settings: () => configGtag({ page_path: "/settings" }),
   history: () => configGtag({ page_path: "/history" }),
+  myIsland: () => configGtag({ page_path: "/my_island" }),
+  news: () => configGtag({ page_path: "/news" }),
 };
 
 const twoDigit = (input) => ("0" + input).slice(-2);
@@ -415,6 +417,7 @@ export default () => {
             resident={settings.resident}
             timezone={settings.timezone}
             onSave={handleSave}
+            onMount={handleMountMap[page]}
           />
         </ReturnablePage>
       );
@@ -422,7 +425,7 @@ export default () => {
     case "news":
       children = (
         <ReturnablePage title="最新消息" onClickBack={handleClickBack}>
-          <Twitter twitterId="TurnipFriends" />
+          <Twitter twitterId="TurnipFriends" onMount={handleMountMap[page]} />
         </ReturnablePage>
       );
       break;

@@ -1,8 +1,10 @@
 import React, { useEffect, useRef } from "react";
 
-export default ({ twitterId }) => {
+export default ({ twitterId, onMount }) => {
   const containerRef = useRef(null);
-
+  useEffect(() => {
+    onMount();
+  }, []);
   useEffect(() => {
     // ref: https://developer.twitter.com/en/docs/twitter-for-websites/javascript-api/guides/set-up-twitter-for-websites
     window.twttr = (function (d, s, id) {
