@@ -75,3 +75,11 @@ self.addEventListener("install", () => {
     });
   });
 });
+
+self.addEventListener("install", () => {
+  db.then((db) => {
+    db.transaction("badges", "readwrite")
+      .objectStore("badges")
+      .put(true, "settings");
+  });
+});

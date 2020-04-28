@@ -1,4 +1,10 @@
-import React, { Fragment, useState, useEffect, useCallback } from "react";
+import React, {
+  Fragment,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import Snackbar from "@material-ui/core/Snackbar";
@@ -8,6 +14,7 @@ import HistoryIcon from "@material-ui/icons/History";
 import PeopleIcon from "@material-ui/icons/People";
 import SettingsIcon from "@material-ui/icons/Settings";
 import CloseIcon from "@material-ui/icons/Close";
+import Badge from "@material-ui/core/Badge";
 import Home from "components/Home";
 import MyFriends from "components/MyFriends";
 import Settings from "components/Settings";
@@ -60,15 +67,6 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const handleMountMap = {
-  home: () => configGtag({ page_path: "/" }),
-  myFriends: () => configGtag({ page_path: "/friends" }),
-  settings: () => configGtag({ page_path: "/settings" }),
-  history: () => configGtag({ page_path: "/history" }),
-  myIsland: () => configGtag({ page_path: "/my_island" }),
-  news: () => configGtag({ page_path: "/news" }),
-};
-
 const twoDigit = (input) => ("0" + input).slice(-2);
 
 const formatDuration = (duration) => {
@@ -96,6 +94,21 @@ export default () => {
   const [settings, setSettings] = useState(defaultSettings);
   const [snackbar, setSnackbar] = useState({ message: "", open: false });
   const [myPriceRecords, setMyPriceRecords] = useState([]);
+  const [badgeOfSettings, setBadgeOfSettings] = useState(false);
+  const handleMountMap = useMemo(
+    () => ({
+      home: () => configGtag({ page_path: "/" }),
+      myFriends: () => configGtag({ page_path: "/friends" }),
+      settings: () => {
+        configGtag({ page_path: "/settings" });
+        setBadgeOfSettings(false);
+      },
+      history: () => configGtag({ page_path: "/history" }),
+      myIsland: () => configGtag({ page_path: "/my_island" }),
+      news: () => configGtag({ page_path: "/news" }),
+    }),
+    []
+  );
 
   const handleSnackbarClose = useCallback(() => {
     setSnackbar((state) => ({ ...state, open: false }));
@@ -333,6 +346,25 @@ export default () => {
     if (initialized) fetchMyPriceRecords();
   }, [initialized, settings]);
 
+  useEffect(() => {
+    db.then((db) => {
+      db
+        .transaction("badges")
+        .objectStore("badges")
+        .get("settings").onsuccess = ({ target: { result } }) => {
+        setBadgeOfSettings(!!result);
+      };
+    });
+  }, []);
+
+  useEffect(() => {
+    db.then((db) => {
+      db.transaction("badges", "readwrite")
+        .objectStore("badges")
+        .put(badgeOfSettings, "settings");
+    });
+  }, [badgeOfSettings]);
+
   let children;
 
   switch (page) {
@@ -461,7 +493,15 @@ export default () => {
           <BottomNavigationAction
             label="設定"
             value="settings"
-            icon={<SettingsIcon />}
+            icon={
+              <Badge
+                color="secondary"
+                variant="dot"
+                badgeContent={badgeOfSettings ? 1 : 0}
+              >
+                <SettingsIcon />
+              </Badge>
+            }
           />
         </BottomNavigation>
       </div>
