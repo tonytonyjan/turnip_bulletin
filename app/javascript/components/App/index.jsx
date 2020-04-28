@@ -28,34 +28,42 @@ import { config as configGtag } from "gtag";
 import "./style";
 
 const handleClickSend = () =>
-  gtag("event", "FAB Send Price Click", {
+  gtag("event", "Open price-sending dialog", {
     event_category: "Homepage",
+    event_label: "Click on price-sending FAB",
   });
 const handleClickRefresh = () =>
-  gtag("event", "FAB Refresh Page Click", {
+  gtag("event", "Refresh page", {
     event_category: "Homepage",
+    event_label: "Click on page-refreshing FAB",
   });
 const handleSubmitPriceRecord = (event) =>
-  gtag("event", "Dialog Send Click", {
-    event_category: "Homepage",
-    event_label: new FormData(event.target).get("text")
-      ? "With Message"
-      : "Without Message",
-    value: 1,
-  });
+  gtag(
+    "event",
+    new FormData(event.target).get("text")
+      ? "Send price with message"
+      : "Send price without message",
+    {
+      event_category: "Homepage",
+      event_label: 'Click on button "send"',
+      value: 1,
+    }
+  );
 const handleClickAddFriend = () =>
-  gtag("event", "FAB Add Friend Click", {
-    event_category: "Friends Page",
+  gtag("event", "Open friends-adding dialog", {
+    event_category: "Friends",
+    event_label: "Click on friends-adding FAB",
   });
 const handleSubmitNewFriend = () =>
-  gtag("event", "Dialog Save Click", {
-    event_category: "Friends Page",
+  gtag("event", "Add friend", {
+    event_category: "Friends",
+    event_label: 'Click on button "save"',
     value: 1,
   });
 const handleClickPredictionLink = () =>
-  gtag("event", "Outbound Click", {
+  gtag("event", "Click outbound link", {
     event_category: "History",
-    event_label: "https://turnipprophet.io",
+    event_label: "Click https://turnipprophet.io/",
   });
 
 const useStyles = makeStyles(() => ({
