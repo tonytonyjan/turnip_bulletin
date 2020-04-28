@@ -59,6 +59,7 @@ export default ({ island, resident, timezone, onSave, onMount }) => {
         fullWidth
         defaultValue={resident}
         placeholder="ex. 老任"
+        helperText="　"
       />
       <DialogSelect
         options={zoneOptions}

@@ -29,7 +29,7 @@ export default ({ onClickPage, onMount }) => {
               <AccountCircleIcon />
             </Avatar>
           </ListItemAvatar>
-          <ListItemText primary="我的島嶼" secondary="設定島嶼名稱與名字" />
+          <ListItemText primary="我的島嶼" secondary="設定島嶼名稱、名字、時區" />
         </ListItem>
       </List>
       <List
@@ -48,8 +48,8 @@ export default ({ onClickPage, onMount }) => {
             </Avatar>
           </ListItemAvatar>
           <ListItemText
-            primary="關於動森股友會"
-            secondary="專案、團隊、原始碼"
+            primary="關於我們"
+            secondary="專案簡介、製作團隊簡介"
           />
         </ListItem>
         <ListItem
@@ -76,7 +76,7 @@ export default ({ onClickPage, onMount }) => {
               <HelpIcon />
             </Avatar>
           </ListItemAvatar>
-          <ListItemText primary="幫助中心" secondary="使用說明與 FAQ" />
+          <ListItemText primary="幫助中心" secondary="使用說明、FAQ" />
         </ListItem>
       </List>
     </Fragment>
