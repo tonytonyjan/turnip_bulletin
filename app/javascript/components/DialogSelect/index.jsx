@@ -8,6 +8,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import { makeStyles } from "@material-ui/core/styles";
 import { useRef } from "react";
 
@@ -54,6 +56,13 @@ export default ({
         onFocus: handleFocus,
         value: selectedOption ? optionPrimaryLabel(selectedOption) : "",
         label,
+        InputProps: {
+          endAdornment: (
+            <InputAdornment position="start">
+              <ArrowDropDownIcon />
+            </InputAdornment>
+          ),
+        },
       })}
       <input
         type="hidden"
