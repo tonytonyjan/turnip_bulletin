@@ -12,6 +12,13 @@ const zoneOptions = zones
     name,
     offsetName: timezoneToOffsetName(id),
   }));
+const systemTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+if (!zoneOptions.find((zoneOption) => zoneOption.id === systemTimezone))
+  zoneOptions.unshift({
+    id: systemTimezone,
+    name: "系統時區",
+    offsetName: timezoneToOffsetName(systemTimezone),
+  });
 
 export default ({ island, resident, timezone, onSave, onMount }) => {
   const inputIsland = useRef(null);
