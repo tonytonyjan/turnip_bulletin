@@ -22,6 +22,7 @@ import History from "components/History";
 import MyIsland from "components/MyIsland";
 import ReturnablePage from "components/ReturnablePage";
 import Twitter from "components/Twitter";
+import Feedback from "components/Feedback";
 import { makeStyles } from "@material-ui/core/styles";
 import db from "db";
 import { config as configGtag } from "gtag";
@@ -114,6 +115,7 @@ export default () => {
       history: () => configGtag({ page_path: "/history" }),
       myIsland: () => configGtag({ page_path: "/my_island" }),
       news: () => configGtag({ page_path: "/news" }),
+      feedback: () => configGtag({ page_path: "/feedback" }),
     }),
     []
   );
@@ -468,6 +470,9 @@ export default () => {
           <Twitter twitterId="TurnipFriends" onMount={handleMountMap[page]} />
         </ReturnablePage>
       );
+      break;
+    case "feedback":
+      children = <Feedback onMount={handleMountMap[page]} />;
       break;
     default:
       children = <h1>404</h1>;

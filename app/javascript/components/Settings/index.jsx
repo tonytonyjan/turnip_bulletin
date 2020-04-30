@@ -9,6 +9,7 @@ import InfoIcon from "@material-ui/icons/Info";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import HelpIcon from "@material-ui/icons/Help";
 import TwitterIcon from "@material-ui/icons/Twitter";
+import FeedbackIcon from "@material-ui/icons/Feedback";
 
 export default ({ onClickPage, onMount }) => {
   useEffect(() => {
@@ -77,6 +78,22 @@ export default ({ onClickPage, onMount }) => {
             </Avatar>
           </ListItemAvatar>
           <ListItemText primary="幫助中心" secondary="使用說明、FAQ" />
+        </ListItem>
+        <ListItem
+          button
+          onClick={useCallback(() => {
+            onClickPage("feedback");
+          }, [onClickPage])}
+        >
+          <ListItemAvatar>
+            <Avatar>
+              <FeedbackIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primary="建議回饋"
+            secondary="發問、評價、回報問題、許願新功能"
+          />
         </ListItem>
       </List>
     </Fragment>
