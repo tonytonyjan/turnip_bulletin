@@ -27,6 +27,17 @@ import { makeStyles } from "@material-ui/core/styles";
 import db from "db";
 import { config as configGtag } from "gtag";
 import "./style";
+import { Workbox, messageSW } from "workbox-window";
+
+let wb;
+if ("serviceWorker" in navigator) {
+  wb = new Workbox("/sw.js");
+  // see https://github.com/GoogleChrome/workbox/issues/2031
+  navigator.serviceWorker.addEventListener("controllerchange", () =>
+    window.location.reload()
+  );
+  wb.addEventListener("controlling", () => window.location.reload());
+}
 
 const handleClickSend = () =>
   gtag("event", "Open price-sending dialog", {
@@ -104,6 +115,8 @@ export default () => {
   const [snackbar, setSnackbar] = useState({ message: "", open: false });
   const [myPriceRecords, setMyPriceRecords] = useState([]);
   const [badgeOfSettings, setBadgeOfSettings] = useState(false);
+  const [newSw, setNewSw] = useState(null);
+  const [releaseNotes, setReleaseNotes] = useState([]);
   const handleMountMap = useMemo(
     () => ({
       home: () => configGtag({ page_path: "/" }),
@@ -291,6 +304,7 @@ export default () => {
   }, [settings]);
 
   const handleClickPage = useCallback((page) => {
+    if (wb) wb.update();
     switch (page) {
       case "about":
         window.open("/about", "_blank");
@@ -304,6 +318,17 @@ export default () => {
         break;
     }
   }, []);
+
+  const handleSwWaiting = useCallback((event) => {
+    setNewSw(event.sw);
+    messageSW(event.sw, {
+      type: "REQUEST_RELEASE_NOTES",
+    }).then((releaseNotes) => setReleaseNotes(releaseNotes));
+  }, []);
+
+  const handleAcceptUpdate = useCallback(() => {
+    messageSW(newSw, { type: "SKIP_WAITING" });
+  }, [newSw]);
 
   useEffect(() => {
     window.history.replaceState({ page }, null);
@@ -375,6 +400,13 @@ export default () => {
     });
   }, [badgeOfSettings]);
 
+  useEffect(() => {
+    if (!wb) return;
+    wb.addEventListener("waiting", handleSwWaiting);
+    wb.addEventListener("externalwaiting", handleSwWaiting);
+    wb.register();
+  }, []);
+
   let children;
 
   switch (page) {
@@ -437,6 +469,10 @@ export default () => {
         <Settings
           onClickPage={handleClickPage}
           onMount={handleMountMap[page]}
+          hasNewVersion={!!newSw}
+          onAcceptUpdate={handleAcceptUpdate}
+          onRejectUpdate={() => {}}
+          releaseNotes={releaseNotes}
         />
       );
       break;
@@ -510,7 +546,7 @@ export default () => {
               <Badge
                 color="secondary"
                 variant="dot"
-                badgeContent={badgeOfSettings ? 1 : 0}
+                badgeContent={!!newSw || badgeOfSettings ? 1 : 0}
               >
                 <SettingsIcon />
               </Badge>

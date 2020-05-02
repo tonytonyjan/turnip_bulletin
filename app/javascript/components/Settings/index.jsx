@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useCallback } from "react";
+import React, { Fragment, useState, useEffect, useCallback } from "react";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -10,10 +10,29 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import HelpIcon from "@material-ui/icons/Help";
 import TwitterIcon from "@material-ui/icons/Twitter";
 import FeedbackIcon from "@material-ui/icons/Feedback";
+import Badge from "@material-ui/core/Badge";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import "./style.css";
 
-export default ({ onClickPage, onMount }) => {
+export default ({
+  onClickPage,
+  hasNewVersion,
+  onAcceptUpdate,
+  onRejectUpdate,
+  onMount,
+  releaseNotes,
+}) => {
   useEffect(() => {
     onMount();
+  }, []);
+
+  const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
+  const handleCloseUpdateDialog = useCallback(() => {
+    setOpenUpdateDialog(false);
   }, []);
 
   return (
@@ -30,7 +49,30 @@ export default ({ onClickPage, onMount }) => {
               <AccountCircleIcon />
             </Avatar>
           </ListItemAvatar>
-          <ListItemText primary="我的島嶼" secondary="設定島嶼名稱、名字、時區" />
+          <ListItemText
+            primary="我的島嶼"
+            secondary="設定島嶼名稱、名字、時區"
+          />
+        </ListItem>
+        <ListItem
+          button
+          onClick={useCallback(() => {
+            setOpenUpdateDialog(true);
+          }, [])}
+        >
+          <ListItemAvatar>
+            <Badge
+              overlap="circle"
+              color="secondary"
+              variant="dot"
+              badgeContent={hasNewVersion ? 1 : 0}
+            >
+              <Avatar>
+                <AccountCircleIcon />
+              </Avatar>
+            </Badge>
+          </ListItemAvatar>
+          <ListItemText primary="檢查更新" />
         </ListItem>
       </List>
       <List
@@ -48,10 +90,7 @@ export default ({ onClickPage, onMount }) => {
               <InfoIcon />
             </Avatar>
           </ListItemAvatar>
-          <ListItemText
-            primary="關於我們"
-            secondary="專案簡介、製作團隊簡介"
-          />
+          <ListItemText primary="關於我們" secondary="專案簡介、製作團隊簡介" />
         </ListItem>
         <ListItem
           button
@@ -96,6 +135,62 @@ export default ({ onClickPage, onMount }) => {
           />
         </ListItem>
       </List>
+      <Dialog open={openUpdateDialog} onClose={handleCloseUpdateDialog}>
+        {hasNewVersion ? (
+          <Fragment>
+            <DialogContent>
+              <Typography color="textSecondary" variant="body1" component="div">
+                <div className="settings__update-content">
+                  更新內容：
+                  <ol className="settings__update-content-list">
+                    {releaseNotes.map((note) => (
+                      <li key={note}>{note}</li>
+                    ))}
+                  </ol>
+                </div>
+              </Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                onClick={() => {
+                  handleCloseUpdateDialog();
+                  onRejectUpdate();
+                }}
+                color="primary"
+              >
+                不更新
+              </Button>
+              <Button
+                onClick={() => {
+                  handleCloseUpdateDialog();
+                  onAcceptUpdate();
+                }}
+                color="primary"
+                autoFocus
+              >
+                立即更新
+              </Button>
+            </DialogActions>
+          </Fragment>
+        ) : (
+          <Fragment>
+            <DialogContent>
+              <Typography color="textSecondary" variant="body1">
+                已經是最新版本
+              </Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                onClick={handleCloseUpdateDialog}
+                color="primary"
+                autoFocus
+              >
+                我知道了
+              </Button>
+            </DialogActions>
+          </Fragment>
+        )}
+      </Dialog>
     </Fragment>
   );
 };

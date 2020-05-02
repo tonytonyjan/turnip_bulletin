@@ -1,0 +1,9 @@
+.settings__update-content {
+  line-height: 28px;
+}
+
+.settings__update-content-list {
+  margin: 0;
+  padding: 0;
+  list-style-position: inside;
+}

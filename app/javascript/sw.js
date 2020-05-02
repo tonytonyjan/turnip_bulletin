@@ -1,10 +1,6 @@
 import { precacheAndRoute } from "workbox-precaching";
-import { skipWaiting, clientsClaim } from "workbox-core";
 import * as googleAnalytics from "workbox-google-analytics";
 import db from "db";
-
-skipWaiting();
-clientsClaim();
 
 const manifest = self.__WB_MANIFEST;
 
@@ -76,10 +72,17 @@ self.addEventListener("install", () => {
   });
 });
 
-self.addEventListener("install", () => {
-  db.then((db) => {
-    db.transaction("badges", "readwrite")
-      .objectStore("badges")
-      .put(true, "settings");
-  });
+const releaseNotes = ["新增建議回饋表單", "新增檢查更新功能"];
+
+self.addEventListener("message", ({ data, ports }) => {
+  switch (data.type) {
+    case "SKIP_WAITING":
+      skipWaiting();
+      break;
+    case "REQUEST_RELEASE_NOTES":
+      ports[0].postMessage(releaseNotes);
+      break;
+    default:
+      break;
+  }
 });
