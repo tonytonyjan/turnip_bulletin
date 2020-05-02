@@ -508,7 +508,11 @@ export default () => {
       );
       break;
     case "feedback":
-      children = <Feedback onMount={handleMountMap[page]} />;
+      children = (
+        <ReturnablePage title="建議回饋" onClickBack={handleClickBack}>
+          <Feedback onMount={handleMountMap[page]} />
+        </ReturnablePage>
+      );
       break;
     default:
       children = <h1>404</h1>;
