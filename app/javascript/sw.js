@@ -1,6 +1,7 @@
 import { precacheAndRoute } from "workbox-precaching";
 import * as googleAnalytics from "workbox-google-analytics";
 import db from "db";
+import releaseNotes from "releaseNotes";
 
 const manifest = self.__WB_MANIFEST;
 
@@ -71,12 +72,6 @@ self.addEventListener("install", () => {
     });
   });
 });
-
-const releaseNotes = [
-  "在「設定」新增「建議回饋」",
-  "在「設定」新增「立即更新」",
-  "在「我的記錄」修改週日資料的背景顏色",
-];
 
 self.addEventListener("message", ({ data, ports }) => {
   switch (data.type) {
