@@ -16,6 +16,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import SystemUpdateIcon from "@material-ui/icons/SystemUpdate";
 import "./style.css";
 
 export default ({
@@ -68,7 +69,7 @@ export default ({
               badgeContent={hasNewVersion ? 1 : 0}
             >
               <Avatar>
-                <AccountCircleIcon />
+                <SystemUpdateIcon />
               </Avatar>
             </Badge>
           </ListItemAvatar>
