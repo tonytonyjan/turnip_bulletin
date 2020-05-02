@@ -38,7 +38,11 @@ export default ({
 
   return (
     <Fragment>
-      <List component="nav" subheader={<ListSubheader>偏好設定</ListSubheader>}>
+      <List
+        component="nav"
+        className="settings__list"
+        subheader={<ListSubheader>偏好設定</ListSubheader>}
+      >
         <ListItem
           button
           onClick={useCallback(() => {
@@ -78,6 +82,7 @@ export default ({
       </List>
       <List
         component="nav"
+        className="settings__list"
         subheader={<ListSubheader>資訊與支援</ListSubheader>}
       >
         <ListItem

@@ -1,3 +1,7 @@
+.settings__list {
+  background-color: white;
+}
+
 .settings__update-content {
   line-height: 28px;
 }
