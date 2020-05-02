@@ -8,6 +8,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import "./style";
 
 const createPredictUrl = (priceRecords) => {
   const prices = new Array(13);
@@ -43,7 +44,16 @@ export default ({ onMount, priceRecords, onClickPredictionLink }) => {
           <TableBody>
             {priceRecords.map(({ id, updatedAt, price, timezone }) => {
               return (
-                <TableRow key={id}>
+                <TableRow
+                  key={id}
+                  className={
+                    updatedAt.toLocaleDateString("en-US", {
+                      weekday: "long",
+                    }) === "Sunday"
+                      ? "history__sunday-row"
+                      : undefined
+                  }
+                >
                   <TableCell>
                     {updatedAt.toLocaleDateString("zh-TW", {
                       timeZone: timezone,
