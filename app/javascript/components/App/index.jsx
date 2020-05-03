@@ -28,6 +28,7 @@ import db from "db";
 import { config as configGtag } from "gtag";
 import "./style";
 import { Workbox, messageSW } from "workbox-window";
+import AutoSizedIframe from "components/AutoSizedIframe";
 
 let wb;
 if ("serviceWorker" in navigator) {
@@ -129,6 +130,8 @@ export default () => {
       myIsland: () => configGtag({ page_path: "/my_island" }),
       news: () => configGtag({ page_path: "/news" }),
       feedback: () => configGtag({ page_path: "/feedback" }),
+      about: () => {},
+      help: () => {},
     }),
     []
   );
@@ -305,18 +308,8 @@ export default () => {
 
   const handleClickPage = useCallback((page) => {
     if (wb) wb.update();
-    switch (page) {
-      case "about":
-        window.open("/about", "_blank");
-        break;
-      case "help":
-        window.open("/help", "_blank");
-        break;
-      default:
-        setPage(page);
-        window.history.pushState({ page }, null);
-        break;
-    }
+    setPage(page);
+    window.history.pushState({ page }, null);
   }, []);
 
   const handleSwWaiting = useCallback((event) => {
@@ -511,6 +504,20 @@ export default () => {
       children = (
         <ReturnablePage title="建議回饋" onClickBack={handleClickBack}>
           <Feedback onMount={handleMountMap[page]} />
+        </ReturnablePage>
+      );
+      break;
+    case "about":
+      children = (
+        <ReturnablePage title="關於我們" onClickBack={handleClickBack}>
+          <AutoSizedIframe src="/about?iframe=1" onMount={handleMountMap[page]} />
+        </ReturnablePage>
+      );
+      break;
+    case "help":
+      children = (
+        <ReturnablePage title="幫助中心" onClickBack={handleClickBack}>
+          <AutoSizedIframe src="/help?iframe=1" onMount={handleMountMap[page]} />
         </ReturnablePage>
       );
       break;

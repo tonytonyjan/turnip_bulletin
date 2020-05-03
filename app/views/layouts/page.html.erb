@@ -77,27 +77,18 @@
   </head>
 
   <body>
+    <% unless params[:iframe] %>
     <nav>
       <ol>
         <li>
-          <a id="root_link" href="/">回到動森股友會</a>
+          <a href="/">回到動森股友會</a>
         </li>
         <li><a href="/about">關於我們</a></li>
         <li><a href="/help">幫助中心</a></li>
       </ol>
     </nav>
-    <script>
-      document
-        .getElementById("root_link")
-        .addEventListener("click", (event) => {
-          if (
-            document.referrer === "https://turnip-dev.tonytonyjan.net:3000/"
-          ) {
-            event.preventDefault();
-            window.close();
-          }
-        });
-    </script>
+    <% end %>
+    <% if !params[:iframe] && content_for?(:title) %><h1><%= yield(:title) %></h1><% end %>
     <%= yield %>
   </body>
 </html>
