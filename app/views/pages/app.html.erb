@@ -8,7 +8,15 @@
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
 
-      gtag('config', '<%= Rails.configuration.ga_measurement_id %>', { 'send_page_view': false });
+      gtag("config", "<%= Rails.configuration.ga_measurement_id %>", {
+        send_page_view: false,
+        custom_map: { dimension1: "displayMode" },
+      });
+      gtag("event", "display mode dimension", {
+        displayMode: ["browser", "standalone", "minimal-ui", "fullscreen"].find(
+          (mode) => window.matchMedia(`(display-mode: ${mode})`).matches
+        ),
+      });
     </script>
     <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="theme-color" content="#ab47bc" />
