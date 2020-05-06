@@ -10,21 +10,38 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import "./style";
 
-const createPredictUrl = (priceRecords) => {
+const weekdayMap = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
+const createPredictUrl = (priceRecords, timezone) => {
   const prices = new Array(13);
+  const dateTimeFormat = new Intl.DateTimeFormat("en-US", {
+    weekday: "long",
+    hour: "numeric",
+    hour12: false,
+    timeZone: timezone,
+  });
   for (let i = priceRecords.length - 1; i >= 0; i--) {
     const { updatedAt, price } = priceRecords[i];
-    const weekday = updatedAt.getDay();
-    if (weekday === 0) {
+    const parts = dateTimeFormat.formatToParts(updatedAt);
+    const weekday = parts.find((part) => part.type === "weekday").value;
+    const hour = parseInt(parts.find((part) => part.type === "hour").value);
+    if (weekday === "Sunday") {
       prices[0] = price;
       break;
     }
-    prices[weekday * 2 - 1 + (updatedAt.getHours() < 12 ? 0 : 1)] = price;
+    prices[weekdayMap.indexOf(weekday) * 2 - 1 + (hour < 12 ? 0 : 1)] = price;
   }
   return `https://turnipprophet.io/?prices=${prices.join(".")}`;
 };
 
-export default ({ onMount, priceRecords, onClickPredictionLink }) => {
+export default ({ timezone, onMount, priceRecords, onClickPredictionLink }) => {
   useEffect(() => {
     onMount();
   }, []);
@@ -49,6 +66,7 @@ export default ({ onMount, priceRecords, onClickPredictionLink }) => {
                   className={
                     updatedAt.toLocaleDateString("en-US", {
                       weekday: "long",
+                      timeZone: timezone,
                     }) === "Sunday"
                       ? "history__sunday-row"
                       : undefined
@@ -85,7 +103,7 @@ export default ({ onMount, priceRecords, onClickPredictionLink }) => {
       </TableContainer>
       <Button
         color="primary"
-        href={createPredictUrl(priceRecords)}
+        href={createPredictUrl(priceRecords, timezone)}
         target="_blank"
         rel="noreferrer noopener"
         onClick={onClickPredictionLink}

@@ -472,6 +472,7 @@ export default () => {
     case "history":
       children = (
         <History
+          timezone={settings.timezone}
           priceRecords={myPriceRecords.filter(
             ({ timezone }) => timezone === settings.timezone
           )}
@@ -510,14 +511,20 @@ export default () => {
     case "about":
       children = (
         <ReturnablePage title="關於我們" onClickBack={handleClickBack}>
-          <AutoSizedIframe src="/about?iframe=1" onMount={handleMountMap[page]} />
+          <AutoSizedIframe
+            src="/about?iframe=1"
+            onMount={handleMountMap[page]}
+          />
         </ReturnablePage>
       );
       break;
     case "help":
       children = (
         <ReturnablePage title="幫助中心" onClickBack={handleClickBack}>
-          <AutoSizedIframe src="/help?iframe=1" onMount={handleMountMap[page]} />
+          <AutoSizedIframe
+            src="/help?iframe=1"
+            onMount={handleMountMap[page]}
+          />
         </ReturnablePage>
       );
       break;
