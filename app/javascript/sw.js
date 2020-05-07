@@ -23,7 +23,7 @@ precacheAndRoute(
       revision: null,
     },
     { url: "/about?iframe=1", revision: "2" },
-    { url: "/help?iframe=1", revision: "3" },
+    { url: "/help?iframe=1", revision: "4" },
   ])
 );
 
