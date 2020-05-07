@@ -7,8 +7,7 @@ export default ({ src, onMount }) => {
   }, []);
 
   const handleLoad = useCallback(() => {
-    iframeRef.current.height =
-      iframeRef.current.contentWindow.document.documentElement.scrollHeight + 1;
+    iframeRef.current.height = iframeRef.current.contentDocument.documentElement.getBoundingClientRect().height;
   }, []);
 
   return (
