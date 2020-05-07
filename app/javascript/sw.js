@@ -22,8 +22,8 @@ precacheAndRoute(
       url: "https://unpkg.com/sakura.css@1.0.0/css/sakura.css",
       revision: null,
     },
-    { url: "/about?iframe=1", revision: "1" },
-    { url: "/help?iframe=1", revision: "2" },
+    { url: "/about?iframe=1", revision: "2" },
+    { url: "/help?iframe=1", revision: "3" },
   ])
 );
 
