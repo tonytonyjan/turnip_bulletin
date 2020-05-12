@@ -17,13 +17,13 @@ precacheAndRoute(
         "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap",
       revision: "1",
     },
-    { url: "/manifest.webmanifest", revision: "2" },
+    { url: "/manifest.webmanifest", revision: "3" },
     {
       url: "https://unpkg.com/sakura.css@1.0.0/css/sakura.css",
       revision: null,
     },
-    { url: "/about?iframe=1", revision: "2" },
-    { url: "/help?iframe=1", revision: "4" },
+    { url: "/about?iframe=1", revision: "3" },
+    { url: "/help?iframe=1", revision: "5" },
   ])
 );
 
