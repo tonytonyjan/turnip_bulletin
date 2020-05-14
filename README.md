@@ -1,10 +1,18 @@
 # Development
 
+**Rails:**
+
 ```sh
-docker-compose up
+docker-compose up web
 ```
 
-SSL:
+**Storybook:**
+
+```
+docker-compose up storybook
+```
+
+**SSL:**
 
 ```sh
 export RAILS_BIND=ssl://0.0.0.0:3000?key=dev.local-key.pem&cert=dev.local.pem
