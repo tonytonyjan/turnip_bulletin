@@ -17,6 +17,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import SystemUpdateIcon from "@material-ui/icons/SystemUpdate";
+import GitHubIcon from "@material-ui/icons/GitHub";
 import "./style.css";
 
 export default ({
@@ -97,6 +98,20 @@ export default ({
             </Avatar>
           </ListItemAvatar>
           <ListItemText primary="關於我們" secondary="專案簡介、製作團隊簡介" />
+        </ListItem>
+        <ListItem
+          component="a"
+          button
+          href="https://github.com/tonytonyjan/turnip_bulletin"
+          target="_blank"
+          rel="noreferrer noopener"
+        >
+          <ListItemAvatar>
+            <Avatar>
+              <GitHubIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText primary="原始碼" secondary="歡迎貢獻" />
         </ListItem>
         <ListItem
           button
