@@ -19,6 +19,9 @@ const weekdayMap = [
   "Friday",
   "Saturday",
 ];
+const oneWeek = 3600000 * 24 * 7;
+const fourteenHours = 3600000 * 14;
+
 const createPredictUrl = (priceRecords, timezone) => {
   const prices = new Array(13);
   const dateTimeFormat = new Intl.DateTimeFormat("en-US", {
@@ -27,8 +30,10 @@ const createPredictUrl = (priceRecords, timezone) => {
     hour12: false,
     timeZone: timezone,
   });
+  const oneWeekAgo = new Date() - oneWeek + fourteenHours;
   for (let i = priceRecords.length - 1; i >= 0; i--) {
     const { updatedAt, price } = priceRecords[i];
+    if (updatedAt <= oneWeekAgo) break;
     const parts = dateTimeFormat.formatToParts(updatedAt);
     const weekday = parts.find((part) => part.type === "weekday").value;
     const hour = parseInt(parts.find((part) => part.type === "hour").value);
